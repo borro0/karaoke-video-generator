@@ -16,24 +16,11 @@ Window {
         Tab {
             id: projectGenerator
             title: "Project generator"
-            FileDialogs { }
+            ProjectGenerator { }
         }
         Tab {
-            id:
-            title: "Color"
-            ColorDialogs { }
-        }
-        Tab {
-            title: "Font"
-            FontDialogs { anchors.fill: parent }
-        }
-        Tab {
-            title: "Message"
-            MessageDialogs { anchors.fill:parent }
-        }
-        Tab {
-            title: "Custom"
-            CustomDialogs { anchors.fill:parent }
+            title: "Timing Tweaker"
+            TimingTweaker {}
         }
     }
 

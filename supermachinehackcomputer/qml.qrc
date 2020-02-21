@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>project_generator.qml</file>
+        <file>ProjectGenerator.qml</file>
+        <file>TimingTweaker.qml</file>
     </qresource>
 </RCC>
