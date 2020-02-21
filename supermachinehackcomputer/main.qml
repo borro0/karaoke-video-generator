@@ -6,7 +6,7 @@ import QtQuick.Controls 1.2
 
 Window {
     visible: true
-    width: 640
+    width: 700
     height: 480
     title: qsTr("Super Machine Hack Computer")
 

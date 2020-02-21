@@ -16,6 +16,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp
 
+OTHER_FILES += \
+    main.qml \
+    ProjectGenerator.qml \
+    TimingTweaker.qml
+
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
