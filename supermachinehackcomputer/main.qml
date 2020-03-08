@@ -4,11 +4,10 @@ import QtQuick.Dialogs 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.2
 
-Window {
+Item {
     visible: true
     width: 700
     height: 480
-    title: qsTr("Super Machine Hack Computer")
 
     TabView {
         anchors.fill: parent

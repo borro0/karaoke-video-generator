@@ -3,6 +3,7 @@
         <file>main.qml</file>
         <file>ProjectGenerator.qml</file>
         <file>TimingTweaker.qml</file>
-        <file>LRKB.jpg</file>
+        <file>images/computer.jfif</file>
+        <file>images/LRKB.jpg</file>
     </qresource>
 </RCC>
