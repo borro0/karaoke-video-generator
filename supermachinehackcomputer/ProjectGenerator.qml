@@ -22,13 +22,20 @@ Item {
         }
 
         ColumnLayout {
+            width: 550
+
             Item { Layout.preferredHeight: 4 } // padding
             spacing: 8
 
-            Text {
-                text: "The project generator let's you setup a karaoke video project"
-            }
+            RowLayout {
+                id: description
 
+                TextArea {
+                    width: 300
+                    text: "The project generator let's you setup a karaoke video project"
+                    wrapMode: TextEdit.WrapAnywhere
+                    readOnly: true
+                }
 
 
             RowLayout {
@@ -68,11 +75,20 @@ Item {
                     inputMethodHints: Qt.ImhDigitsOnly
                     validator: IntValidator {bottom: 1; top: 300}
                     placeholderText: "Enter bpm here ..."
+                    enabled: !customCheckBox.checked
                 }
 
                 CheckBox {
                     id: shuffleCheckBox
                     text: "Shuffle?"
+                    Layout.alignment: Qt.AlignBaseline
+                    checked: false
+                    enabled: !customCheckBox.checked
+                }
+
+                CheckBox {
+                    id: customCheckBox
+                    text: "Custom"
                     Layout.alignment: Qt.AlignBaseline
                     checked: false
                 }
@@ -86,8 +102,11 @@ Item {
             }
 
             Button {
-                Layout.alignment: Qt.AlignHCenter
-                text: "Activeer de SUPER MACHINE HACK COMPUTER!"
+                Layout.alignment: Qt.AlignHCenter                
+                text: "Activeer de SUPER MACHINE HACK COMPUTER PROJECT GENERATOR!"
+                background: Rectangle {
+                    color: "gold"
+                }
                 onPressed: pythonCaller.run(titleField.text, artistField.text, bpmField.text, shuffleCheckBox.checked, forceCheckBox.checked)
             }
 
