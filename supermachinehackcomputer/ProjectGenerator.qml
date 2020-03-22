@@ -36,6 +36,7 @@ Item {
                     wrapMode: TextEdit.WrapAnywhere
                     readOnly: true
                 }
+            }
 
 
             RowLayout {
