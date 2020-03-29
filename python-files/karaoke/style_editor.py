@@ -5,7 +5,9 @@ import os
 
 @click.command()
 @click.option("-d", "--default", is_flag=True, help="All files in the default folder should be updated")
-@click.option("-f", "--filename", help="Update a specific file. Give the complete filename of target file, it will be searced in the default folder")
+@click.option("-f", "--filename", help=("Update a specific file."
+                                        "Give the complete filename of target file,"
+                                        "it will be searched in the default folder"))
 def edit_style(default, filename):
     """
     This program updates video-edit files to the style defined in this file.
