@@ -3,49 +3,58 @@ import click
 import re
 import os
 
+DEFAULT_DIRECTORY = "C:/Users/boris/Google Drive/Live Karaoke Band/Lyric-videos/Video edit files"
+
 @click.command()
-@click.option("-d", "--default", is_flag=True, help="All files in the default folder should be updated")
-@click.option("-f", "--filename", help=("Update a specific file."
-                                        "Give the complete filename of target file,"
-                                        "it will be searched in the default folder"))
-def edit_style(default, filename):
+@click.option("-d", "--directory", default=DEFAULT_DIRECTORY, help=(
+    "All files this directory should be updated."))
+@click.option("-f", "--filename", help=(
+    "Update a only specific file. Give the complete filename of target file,"
+    "it will be searched in the default directory"))
+def edit_style(directory, filename):
     """
     This program updates video-edit files to the style defined in this file.
-    All files in the default folder can be updated, or a single-specific file.
+    All files in the (default) directory can be updated, or a single-specific file.
+    The directory should have the following structure:
+    root
+    --Lyric files
+    ----song1.rzlrc
+    ----song2.rzlrc
+    ----etc...
+    --projects
+    ----song1.rzmmpj
+    ----song2.rzmmpj
+    ----etc...
     """
 
-    default_folder = "C:/Users/boris/Google Drive/Live Karaoke Band/Lyric-videos/Video edit files"
-    lyric_file_folder = f"{default_folder}/Lyric files"
-    project_file_folder = f"{default_folder}/projects"
+    lyric_file_directory = f"{directory}/Lyric files"
+    project_file_directory = f"{directory}/projects"
 
     style_editor = StyleEditor()
 
-    if (default):
-        print("Updating style of all files in the default folder")
-        style_editor.update_all_lyric_files(lyric_file_folder)
-        style_editor.update_all_project_files(project_file_folder)
-    elif(filename):
+    if(filename):
         print(f"Updating style of specific file: {filename}")
-        style_editor.try_update_lyric_file(lyric_file_folder, filename)
-        style_editor.try_update_project_file(project_file_folder, filename)
+        style_editor.try_update_lyric_file(lyric_file_directory, filename)
+        style_editor.try_update_project_file(project_file_directory, filename)
     else:
-        print("No options are given!")
-        exit(-1)
+        print("Updating style of all files in the directory")
+        style_editor.update_all_lyric_files(lyric_file_directory)
+        style_editor.update_all_project_files(project_file_directory)
 
 
 class StyleEditor(object):
-    def update_all_lyric_files(self, lyric_file_folder):
-        for filename in os.listdir(lyric_file_folder):
+    def update_all_lyric_files(self, lyric_file_directory):
+        for filename in os.listdir(lyric_file_directory):
             if filename.endswith(".rzlrc"):
-                self.update_lyric_file(lyric_file_folder, filename)
+                self.update_lyric_file(lyric_file_directory, filename)
 
-    def update_lyric_file(self, folder, filename):
+    def update_lyric_file(self, directory, filename):
         print(f"Updating lyric file: {filename}")
 
         regex_replace_tuples = []
-        regex_replace_tuples.append("nLineInterval=\"[^\"]*\" nInner", "nLineInterval=\"160\" nInner")
+        regex_replace_tuples = regex_replace_tuples + [(" nLineInterval=\"[^\"]*\" ", " nLineInterval=\"160\" ")]
 
-        self.apply_regex_replace_to_file(f"{folder}/{filename}", regex_replace_tuples)
+        self.apply_regex_replace_to_file(f"{directory}/{filename}", regex_replace_tuples)
 
     def apply_regex_replace_to_file(self, filename, regex_replace_tuples):
         print("Converting file from utf-8 to utf-16")
@@ -94,43 +103,43 @@ class StyleEditor(object):
         return line
 
     def can_regex_be_replaced_in_line(self, line, regex_tuple):
-        regex = self.regex_replace_tuple[0]
-        self.replacement = self.regex_replace_tuple[1]
+        regex = regex_tuple[0]
+        self.replacement = regex_tuple[1]
         return re.search(regex, line)
 
     def replace_regex_in_line(self, line, regex_tuple):
-        regex = self.regex_replace_tuple[0]
-        replacement = self.regex_replace_tuple[1]
+        regex = regex_tuple[0]
+        replacement = regex_tuple[1]
         return re.sub(regex, replacement, line)
 
-    def update_all_project_files(self, project_file_folder):
-        for filename in os.listdir(project_file_folder):
+    def update_all_project_files(self, project_file_directory):
+        for filename in os.listdir(project_file_directory):
             if filename.endswith(".rzmmpj"):
-                self.update_project_file(project_file_folder, filename)
+                self.update_project_file(project_file_directory, filename)
 
     def write_lines_back_to_file(self, linelist, filename):
         with open(filename, 'w', encoding='utf-16-le') as f:
             f.writelines(linelist)
 
-    def update_project_file(self, folder, filename):
-        if not os.path.exists(f"{folder}/{filename}"):
-            print(f"file doesn't exists! {folder}/{filename}")
+    def update_project_file(self, directory, filename):
+        if not os.path.exists(f"{directory}/{filename}"):
+            print(f"file doesn't exists! {directory}/{filename}")
             exit(-1)
         print(f"Updating project file: {filename}")
 
-    def try_update_lyric_file(self, lyric_file_folder, filename):
+    def try_update_lyric_file(self, lyric_file_directory, filename):
         lyric_filename = f"{filename}.rzlrc"
-        self.exit_progam_if_file_does_not_exist(lyric_file_folder, lyric_filename)
-        self.update_lyric_file(lyric_file_folder, lyric_filename)
+        self.exit_progam_if_file_does_not_exist(lyric_file_directory, lyric_filename)
+        self.update_lyric_file(lyric_file_directory, lyric_filename)
 
-    def try_update_project_file(self, project_file_folder, filename):
+    def try_update_project_file(self, project_file_directory, filename):
         project_filename = f"{filename}.rzmmpj"
-        self.exit_progam_if_file_does_not_exist(project_file_folder, project_filename)
-        self.update_project_file(project_file_folder, project_filename)
+        self.exit_progam_if_file_does_not_exist(project_file_directory, project_filename)
+        self.update_project_file(project_file_directory, project_filename)
 
-    def exit_progam_if_file_does_not_exist(self, folder, filename):
-        if not os.path.exists(f"{folder}/{filename}"):
-            print(f"file doesn't exists! {folder}/{filename}")
+    def exit_progam_if_file_does_not_exist(self, directory, filename):
+        if not os.path.exists(f"{directory}/{filename}"):
+            print(f"file doesn't exists! {directory}/{filename}")
             exit(-1)
 
 

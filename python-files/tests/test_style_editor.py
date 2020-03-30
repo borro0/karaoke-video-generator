@@ -1,25 +1,29 @@
 import shutil
+import pytest
 
 from karaoke.style_editor import StyleEditor
 
 @pytest.fixture
 def video_edit_files(tmp_path):
-    video_edit_folder = "C:/Users/boris/Google Drive/Live Karaoke Band/Lyric-videos/Video edit files"
+    video_edit_folder = "C:/Users/boris/Google Drive/Live Karaoke Band/Lyric-videos/Video edit files/"
 
-    src = tmp_path
-    dest = video_edit_folder
+    src = video_edit_folder
+    dest = tmp_path / "Video edit files"
 
-    destination = shutil.copytree(src, dest)   
+    destination = shutil.copytree(src, dest)
 
-    print(destination)
+    return destination
 
-def test_video_edit_files(video_edit_files):
-    d = tmp_path / "sub"
-    d.mkdir()
-    p = d / "hello.txt"
-    p.write_text("test")
-    assert p.read_text() == "test"
-    assert len(list(tmp_path.iterdir())) == 1
+def test_single_lyric_file(video_edit_files):
+    print(video_edit_files)
+    style_editor = StyleEditor()
+    style_editor.try_update_lyric_file(f"{video_edit_files}/Lyric files", "Crazy On You - Heart")
+    assert 0
+
+def test_all_lyric_files(video_edit_files):
+    print(video_edit_files)
+    style_editor = StyleEditor()
+    style_editor.update_all_lyric_files(f"{video_edit_files}/Lyric files")
     assert 0
 
 def test_print_regex_replace_tuples():
