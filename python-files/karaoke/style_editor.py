@@ -56,12 +56,12 @@ class StyleEditor(object):
 
         self.apply_regex_replace_to_file(f"{directory}/{filename}", regex_replace_tuples)
 
-    def apply_regex_replace_to_file(self, filename, regex_replace_tuples):
+    def apply_regex_replace_to_file(self, filepath, regex_replace_tuples):
         print("Converting file from utf-8 to utf-16")
-        self.convert_file_from_utf8_to_utf16(filename)
+        self.convert_file_from_utf8_to_utf16(filepath)
 
         print("reading all lines of file")
-        linelist = self.read_all_lines_of_file(filename)
+        linelist = self.read_all_lines_of_file(filepath)
         print("lines read", len(linelist))
 
         self.print_regex_replace_tuples(regex_replace_tuples)
@@ -69,20 +69,20 @@ class StyleEditor(object):
         linelist[:] = [self.apply_regex_tuples_to_line(line, regex_replace_tuples) for line in linelist]
 
         print("write changes back to file")
-        self.write_lines_back_to_file(linelist, filename)
+        self.write_lines_back_to_file(linelist, filepath)
 
-    def convert_file_from_utf8_to_utf16(self, filename):
+    def convert_file_from_utf8_to_utf16(self, filepath):
         try:
             content = ''
-            with open(filename, 'r', encoding="utf-8") as f:
+            with open(filepath, 'r', encoding="utf-8") as f:
                 content = f.read()
-            with open(filename, 'w', encoding="utf-16") as f:
+            with open(filepath, 'w', encoding="utf-16") as f:
                 f.write(content)
         except UnicodeDecodeError:
             print("File is probably already utf-16")
 
-    def read_all_lines_of_file(self, filename):
-        with open(filename, 'r', encoding='utf-16-le') as f:
+    def read_all_lines_of_file(self, filepath):
+        with open(filepath, 'r', encoding='utf-16-le') as f:
             return f.readlines()
 
     def print_regex_replace_tuples(self, regex_replace_tuples):
@@ -117,8 +117,8 @@ class StyleEditor(object):
             if filename.endswith(".rzmmpj"):
                 self.update_project_file(project_file_directory, filename)
 
-    def write_lines_back_to_file(self, linelist, filename):
-        with open(filename, 'w', encoding='utf-16-le') as f:
+    def write_lines_back_to_file(self, linelist, filepath):
+        with open(filepath, 'w', encoding='utf-16-le') as f:
             f.writelines(linelist)
 
     def update_project_file(self, directory, filename):
