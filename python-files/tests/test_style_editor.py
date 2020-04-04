@@ -18,6 +18,13 @@ def video_edit_files(tmp_path):
     return destination
 
 @pytest.fixture
+def local_project_lyric_files():
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    src = f"{dir_path}/test-project-lyric-files"
+
+    return src
+
+@pytest.fixture
 def project_lyric_files(tmp_path):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     src = f"{dir_path}/test-project-lyric-files"
@@ -28,16 +35,16 @@ def project_lyric_files(tmp_path):
 
     return destination
 
-def test_single_lyric_file(project_lyric_files):
-    print(project_lyric_files)
+def test_single_lyric_file(local_project_lyric_files):
+    print(local_project_lyric_files)
     style_editor = StyleEditor()
 
     filename_to_test = "A Horse With No Name - America (38pt - 160line)"
-    filepath_to_test = f"{project_lyric_files}/{filename_to_test}.rzlrc"
+    filepath_to_test = f"{local_project_lyric_files}/{filename_to_test}.rzlrc"
 
-    style_editor.try_update_lyric_file(project_lyric_files, filename_to_test)
+    style_editor.try_update_lyric_file(local_project_lyric_files, filename_to_test)
 
-    filepath_actual = f"{project_lyric_files}/A Horse With No Name - America (32pt - 150line).rzlrc"
+    filepath_actual = f"{local_project_lyric_files}/A Horse With No Name - America (32pt - 150line).rzlrc"
     assert filecmp.cmp(filepath_to_test, filepath_actual)
 
 # def test_all_lyric_files(video_edit_files):
