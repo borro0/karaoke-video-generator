@@ -52,8 +52,8 @@ class StyleEditor(object):
         print(f"Updating lyric file: {filename}")
 
         regex_replace_tuples = []
-        regex_replace_tuples = regex_replace_tuples + [(" nLineInterval=\"[^\"]*\" ", " nLineInterval=\"160\" ")]
-        regex_replace_tuples = regex_replace_tuples + [(" nLineInterval=\"[^\"]*\" ", " nLineInterval=\"160\" ")]
+        regex_replace_tuples = regex_replace_tuples + [(" nLineInterval=\"[^\"]*\" ", " nLineInterval=\"150\" ")]
+        regex_replace_tuples = regex_replace_tuples + [(" lfHeight=\"[^\"]*\" ", " lfHeight=\"32\" ")]
 
         self.apply_regex_replace_to_file(f"{directory}/{filename}", regex_replace_tuples)
 
