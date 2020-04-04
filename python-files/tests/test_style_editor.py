@@ -1,6 +1,7 @@
 import shutil
 import pytest
 import os
+import filecmp
 
 from karaoke.style_editor import StyleEditor
 
@@ -30,8 +31,14 @@ def project_lyric_files(tmp_path):
 def test_single_lyric_file(project_lyric_files):
     print(project_lyric_files)
     style_editor = StyleEditor()
-    style_editor.try_update_lyric_file(f"{project_lyric_files}", "Crazy On You - Heart")
-    assert 0
+
+    filename_to_test = "A Horse With No Name - America (38pt - 160line)"
+    filepath_to_test = f"{project_lyric_files}/{filename_to_test}.rzlrc"
+
+    style_editor.try_update_lyric_file(project_lyric_files, filename_to_test)
+
+    filepath_actual = f"{project_lyric_files}/A Horse With No Name - America (32pt - 150line).rzlrc"
+    assert filecmp.cmp(filepath_to_test, filepath_actual)
 
 # def test_all_lyric_files(video_edit_files):
 #     print(video_edit_files)

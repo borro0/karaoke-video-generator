@@ -53,6 +53,7 @@ class StyleEditor(object):
 
         regex_replace_tuples = []
         regex_replace_tuples = regex_replace_tuples + [(" nLineInterval=\"[^\"]*\" ", " nLineInterval=\"160\" ")]
+        regex_replace_tuples = regex_replace_tuples + [(" nLineInterval=\"[^\"]*\" ", " nLineInterval=\"160\" ")]
 
         self.apply_regex_replace_to_file(f"{directory}/{filename}", regex_replace_tuples)
 
@@ -112,14 +113,14 @@ class StyleEditor(object):
         replacement = regex_tuple[1]
         return re.sub(regex, replacement, line)
 
+    def write_lines_back_to_file(self, linelist, filepath):
+        with open(filepath, 'w', encoding='utf-16-le') as f:
+            f.writelines(linelist)
+
     def update_all_project_files(self, project_file_directory):
         for filename in os.listdir(project_file_directory):
             if filename.endswith(".rzmmpj"):
                 self.update_project_file(project_file_directory, filename)
-
-    def write_lines_back_to_file(self, linelist, filepath):
-        with open(filepath, 'w', encoding='utf-16-le') as f:
-            f.writelines(linelist)
 
     def update_project_file(self, directory, filename):
         if not os.path.exists(f"{directory}/{filename}"):
