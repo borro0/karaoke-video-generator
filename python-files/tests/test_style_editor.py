@@ -42,12 +42,12 @@ def test_single_lyric_file(project_lyric_files):
     input_dir = project_lyric_files
     style_editor = StyleEditor()
 
-    filename_to_test = "A Horse With No Name - America (38pt - 160line)"
+    filename_to_test = "A Horse With No Name - America (29pt - 80line)"
     filepath_to_test = f"{input_dir}/{filename_to_test}.rzlrc"
 
     style_editor.try_update_lyric_file(input_dir, filename_to_test)
 
-    filepath_actual = f"{input_dir}/A Horse With No Name - America (32pt - 150line).rzlrc"
+    filepath_actual = f"{input_dir}/A Horse With No Name - America (42pt - 160line).rzlrc"
     assert filecmp.cmp(filepath_to_test, filepath_actual)
 
 

@@ -6,24 +6,24 @@ DEFAULT_DIRECTORY = "C:/Users/boris/Google Drive/Live Karaoke Band/Lyric-videos/
 
 @click.command()
 @click.option("-d", "--directory", default=DEFAULT_DIRECTORY, help=(
-    "All files this directory should be updated."))
+    f"All files this directory should be updated. Default directory: {DEFAULT_DIRECTORY}"))
 @click.option("-f", "--filename", help=(
-    "Update a only specific file. Give the complete filename of target file,"
+    "Update a only specific lyric and project file. Give the complete filename and"
     "it will be searched in the default directory"))
 def edit_style(directory, filename):
     """
     This program updates video-edit files to the style defined in this file.
     All files in the (default) directory can be updated, or a single-specific file.
-    The directory should have the following structure:
-    root
-    --Lyric files
-    ----song1.rzlrc
-    ----song2.rzlrc
-    ----etc...
-    --projects
-    ----song1.rzmmpj
-    ----song2.rzmmpj
-    ----etc...
+    The directory should have the following structure:\n
+    root\n
+    --Lyric files\n
+    ----song1.rzlrc\n
+    ----song2.rzlrc\n
+    ----etc...\n
+    --projects\n
+    ----song1.rzmmpj\n
+    ----song2.rzmmpj\n
+    ----etc...\n
     """
 
     lyric_file_directory = f"{directory}/Lyric files"
@@ -51,8 +51,8 @@ class StyleEditor(object):
         print(f"Updating lyric file: {filename}")
 
         regex_replace_tuples = []
-        regex_replace_tuples = regex_replace_tuples + [(" nLineInterval=\"[^\"]*\" ", " nLineInterval=\"150\" ")]
-        regex_replace_tuples = regex_replace_tuples + [(" lfHeight=\"[^\"]*\" ", " lfHeight=\"32\" ")]
+        regex_replace_tuples = regex_replace_tuples + [(" nLineInterval=\"[^\"]*\" ", " nLineInterval=\"160\" ")]
+        regex_replace_tuples = regex_replace_tuples + [(" lfHeight=\"[^\"]*\" ", " lfHeight=\"42\" ")]
 
         self.apply_regex_replace_to_file(f"{directory}/{filename}", regex_replace_tuples)
 
@@ -129,9 +129,9 @@ class StyleEditor(object):
         regex_replace_tuples = regex_replace_tuples + [(" lBitRate=\"[^\"]*\" ", " lBitRate=\"2000\" ")]
         regex_replace_tuples = regex_replace_tuples + [(" lFrameHeight=\"[^\"]*\" ", " lFrameHeight=\"720\" ")]
         regex_replace_tuples = regex_replace_tuples + [(" lFrameWidth=\"[^\"]*\" ", " lFrameWidth=\"1280\" ")]
-        regex_replace_tuples = regex_replace_tuples + [(" vensettingIndex=\"[^\"]*\" ", " vensettingIndex=\"2\" ")]
+        regex_replace_tuples = regex_replace_tuples + [(" vensettingIndex=\"[^\"]*\"", " vensettingIndex=\"2\"")]
         regex_replace_tuples = regex_replace_tuples + [(" nIndex=\"[^\"]*\" nMp4P", " nIndex=\"2\" nMp4P")]
-        regex_replace_tuples = regex_replace_tuples + [(" TitlelfHeight=\"[^\"]*\" ", " TitlelfHeight=\"50\" ")]
+        regex_replace_tuples = regex_replace_tuples + [(" TitlelfHeight=\"[^\"]*\" ", " TitlelfHeight=\"70\" ")]
 
         self.apply_regex_replace_to_file(f"{directory}/{filename}", regex_replace_tuples)
 
