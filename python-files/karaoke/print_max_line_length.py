@@ -44,6 +44,7 @@ pretty_table.field_names = ["Song", "Longest line"]
 for filename in os.listdir(lyric_layout_path):
     if filename.endswith(".txt"):
         longest_line = get_max_line_length_file(f"{lyric_layout_path}/{filename}")
-        pretty_table.add_row([filename, longest_line])
+        if (longest_line > 63):
+            pretty_table.add_row([filename, longest_line])
     
 print(pretty_table)
