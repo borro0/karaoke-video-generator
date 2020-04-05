@@ -51,8 +51,8 @@ def test_single_lyric_file(project_lyric_files):
     assert filecmp.cmp(filepath_to_test, filepath_actual)
 
 
-def test_single_project_file(local_project_lyric_files):
-    input_dir = local_project_lyric_files
+def test_single_project_file(project_lyric_files):
+    input_dir = project_lyric_files
     style_editor = StyleEditor()
 
     filename_to_test = "one way or another - Blondie (480p)"
@@ -64,8 +64,12 @@ def test_single_project_file(local_project_lyric_files):
     assert filecmp.cmp(filepath_to_test, filepath_actual)
 
 
-# def test_all_lyric_files(video_edit_files):
-#     print(video_edit_files)
-#     style_editor = StyleEditor()
-#     style_editor.update_all_lyric_files(f"{video_edit_files}/Lyric files")
-#     assert 0
+def test_all_lyric_files(video_edit_files):
+    style_editor = StyleEditor()
+    style_editor.update_all_lyric_files(f"{video_edit_files}/Lyric files")
+
+
+def test_all_project_files(video_edit_files):
+    print(video_edit_files)
+    style_editor = StyleEditor()
+    style_editor.update_all_project_files(f"{video_edit_files}/projects")

@@ -1,4 +1,3 @@
-from pathlib import Path
 import click
 import re
 import os
@@ -133,7 +132,6 @@ class StyleEditor(object):
         regex_replace_tuples = regex_replace_tuples + [(" vensettingIndex=\"[^\"]*\" ", " vensettingIndex=\"2\" ")]
         regex_replace_tuples = regex_replace_tuples + [(" nIndex=\"[^\"]*\" nMp4P", " nIndex=\"2\" nMp4P")]
         regex_replace_tuples = regex_replace_tuples + [(" TitlelfHeight=\"[^\"]*\" ", " TitlelfHeight=\"50\" ")]
-        
 
         self.apply_regex_replace_to_file(f"{directory}/{filename}", regex_replace_tuples)
 
@@ -153,15 +151,5 @@ class StyleEditor(object):
             exit(-1)
 
 
-def sandbox():
-    test_string = "<para nStartLine=\"1\" nAlign=\"0\" nAngle=\"0\" nLineInterval=\"80\" nInnerAlign=\"1\" nScrollDirection=\"0\" nGradient=\"5\" dAppears=\"0.5\"/>"
-    result = re.search("nLineInterval=\"[^\"]*\" nInner", test_string)
-    print(result)
-
-
 if __name__ == '__main__':
-    DEBUG = False
-    if DEBUG:
-        sandbox()
-    else:
-        edit_style()
+    edit_style()
