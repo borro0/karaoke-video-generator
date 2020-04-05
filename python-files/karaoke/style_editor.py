@@ -131,8 +131,8 @@ class StyleEditor(object):
         regex_replace_tuples = regex_replace_tuples + [(" lFrameHeight=\"[^\"]*\" ", " lFrameHeight=\"720\" ")]
         regex_replace_tuples = regex_replace_tuples + [(" lFrameWidth=\"[^\"]*\" ", " lFrameWidth=\"1280\" ")]
         regex_replace_tuples = regex_replace_tuples + [(" vensettingIndex=\"[^\"]*\" ", " vensettingIndex=\"2\" ")]
-        regex_replace_tuples = regex_replace_tuples + [(" nIndex=\"[^\"]*\"  nMp4P", " nIndex=\"2\" nMp4P")]
-        regex_replace_tuples = regex_replace_tuples + [(" TitlelfHeight=\"[^\"]*\" ", " TitlelfHeight=\"2\" ")]
+        regex_replace_tuples = regex_replace_tuples + [(" nIndex=\"[^\"]*\" nMp4P", " nIndex=\"2\" nMp4P")]
+        regex_replace_tuples = regex_replace_tuples + [(" TitlelfHeight=\"[^\"]*\" ", " TitlelfHeight=\"50\" ")]
         
 
         self.apply_regex_replace_to_file(f"{directory}/{filename}", regex_replace_tuples)
