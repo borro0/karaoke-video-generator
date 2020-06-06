@@ -38,38 +38,38 @@ def project_lyric_files(tmp_path):
     return destination
 
 
-def test_single_lyric_file(project_lyric_files):
-    input_dir = project_lyric_files
-    style_editor = StyleEditor()
+# def test_single_lyric_file(project_lyric_files):
+#     input_dir = project_lyric_files
+#     style_editor = StyleEditor()
 
-    filename_to_test = "A Horse With No Name - America (29pt - 80line)"
-    filepath_to_test = f"{input_dir}/{filename_to_test}.rzlrc"
+#     filename_to_test = "A Horse With No Name - America (29pt - 80line)"
+#     filepath_to_test = f"{input_dir}/{filename_to_test}.rzlrc"
 
-    style_editor.try_update_lyric_file(input_dir, filename_to_test)
+#     style_editor.try_update_lyric_file(input_dir, filename_to_test)
 
-    filepath_actual = f"{input_dir}/A Horse With No Name - America (42pt - 160line).rzlrc"
-    assert filecmp.cmp(filepath_to_test, filepath_actual)
-
-
-def test_single_project_file(project_lyric_files):
-    input_dir = project_lyric_files
-    style_editor = StyleEditor()
-
-    filename_to_test = "one way or another - Blondie (480p)"
-    filepath_to_test = f"{input_dir}/{filename_to_test}.rzmmpj"
-
-    style_editor.try_update_project_file(input_dir, filename_to_test)
-
-    filepath_actual = f"{input_dir}/one way or another - Blondie (720p).rzmmpj"
-    assert filecmp.cmp(filepath_to_test, filepath_actual)
+#     filepath_actual = f"{input_dir}/A Horse With No Name - America (42pt - 160line).rzlrc"
+#     assert filecmp.cmp(filepath_to_test, filepath_actual)
 
 
-def test_all_lyric_files(video_edit_files):
-    style_editor = StyleEditor()
-    style_editor.update_all_lyric_files(f"{video_edit_files}/Lyric files")
+# def test_single_project_file(project_lyric_files):
+#     input_dir = project_lyric_files
+#     style_editor = StyleEditor()
+
+#     filename_to_test = "one way or another - Blondie (480p)"
+#     filepath_to_test = f"{input_dir}/{filename_to_test}.rzmmpj"
+
+#     style_editor.try_update_project_file(input_dir, filename_to_test)
+
+#     filepath_actual = f"{input_dir}/one way or another - Blondie (720p).rzmmpj"
+#     assert filecmp.cmp(filepath_to_test, filepath_actual)
 
 
-def test_all_project_files(video_edit_files):
-    print(video_edit_files)
-    style_editor = StyleEditor()
-    style_editor.update_all_project_files(f"{video_edit_files}/projects")
+# def test_all_lyric_files(video_edit_files):
+#     style_editor = StyleEditor()
+#     style_editor.update_all_lyric_files(f"{video_edit_files}/Lyric files")
+
+
+# def test_all_project_files(video_edit_files):
+#     print(video_edit_files)
+#     style_editor = StyleEditor()
+#     style_editor.update_all_project_files(f"{video_edit_files}/projects")

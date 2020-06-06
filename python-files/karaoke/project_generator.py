@@ -23,7 +23,7 @@ def generate_project_and_lyric(title, artist, bpm_filename, force):
 def generate_project_file(title, artist, audiofile, projectfile, lyricfile, force):
 
     # Open XML document using minidom parser
-    DOMTree = minidom.parse("Video edit files/projects/Africa - Toto.rzmmpj")
+    DOMTree = minidom.parse("C:/Users/boris/Google Drive/Live Karaoke Band/Lyric-videos/Video edit files/projects/Africa - Toto.rzmmpj")
     collection = DOMTree.documentElement
 
     # Get all the lines in the project
@@ -63,7 +63,7 @@ def add_end_to_last_line(txtfile):
         linelist[-1] = "{end}"
     else:
         print("No end detected, write add {end}")
-        linelist.append("{end}")
+        linelist.append("\n{end}")
 
     print("write changes back to file")
     with open(txtfile, 'w', encoding="utf-16") as f:
@@ -82,7 +82,7 @@ def convert_txt_file_to_utf16(txtfile):
 
 def generate_lyric_file(audiofile, txtfile, lyricfile, force):
     # open template
-    DOMTree = minidom.parse("Video edit files/Lyric files/Venus - Schocking Blue.rzlrc")
+    DOMTree = minidom.parse("C:/Users/boris/Google Drive/Live Karaoke Band/Lyric-videos/Video edit files/Lyric files/Venus - Schocking Blue.rzlrc")
     collection = DOMTree.documentElement
 
     # set proper .txt file
