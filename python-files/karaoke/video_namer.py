@@ -11,7 +11,6 @@ DEFAULT_PROJECT_DIRECTORY = "C:/Users/boris/Google Drive/Live Karaoke Band/Lyric
 @click.option("-p", "--project-directory", default=DEFAULT_PROJECT_DIRECTORY, type=click.Path(exists=True), help=(
     f"Directory which contains all the projects. Default project directory: {DEFAULT_PROJECT_DIRECTORY}"))
 @click.option("-s", "--start-index", default=0, type=int, help=("Index of first video"))
-@click.option("-n", "--nr-of-videos", type=int, help=("Number of videos to render"))
 def rename_videos(project_directory, target_directory, start_index, nr_of_videos):
     """
     This program updates the output of a batch render or Youtube Movie Maker to use the
