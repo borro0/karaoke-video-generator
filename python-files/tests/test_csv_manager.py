@@ -1,5 +1,7 @@
 import pytest
 import os
+import filecmp
+import tempfile
 
 from karaoke.csv_manager import CsvManager
 # Execute test with: pytest -s -k "csv_manager"
@@ -21,9 +23,13 @@ def tracklist_bpm_file():
     return csv_file
 
 
-def read_playlist(color):
+def get_playlist_filename(color):
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    file = f"{dir_path}/csv_files/{color}_playlist.txt"
+    return f"{dir_path}/csv_files/{color}_playlist.txt"
+
+
+def read_playlist(color):
+    file = get_playlist_filename(color)
     with open(file) as f:
         content_list = f.read().splitlines()
 
@@ -76,3 +82,10 @@ def test_generate_green_playlist(tracklist_bpm_file, green_playlist):
     green_playlist_read = csv_manager.generate_green_playlist()
 
     assert compare_two_lists(green_playlist, green_playlist_read)
+
+
+def test_store_playlist_to_file(green_playlist):
+    green_playlist_file_expected = get_playlist_filename("green")
+    generated_playlist_actual = CsvManager.store_playlist_to_file(green_playlist)
+
+    assert filecmp.cmp(green_playlist_file_expected, generated_playlist_actual)

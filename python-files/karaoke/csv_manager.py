@@ -1,8 +1,11 @@
 import csv
+import tempfile
+import os
 
 
 class CsvManager:
     "This class manages the reading of the CSV file, used as database to store all songs"
+
     def __init__(self, csv_file_location):
         self.rows = self.read_csv_file(csv_file_location)
 
@@ -40,6 +43,8 @@ class CsvManager:
     def generate_playlist_by_difficulty(self, difficulty):
         selected_rows = []
         for row in self.rows:
+            if row["Video"] == "FALSE":
+                continue
             if row["Extra aandacht"] == difficulty:
                 video_name = self.convert_row_into_video_name(row)
                 selected_rows.append(video_name)
@@ -47,3 +52,10 @@ class CsvManager:
 
     def convert_row_into_video_name(self, row):
         return f"{row['Track']} - {row['Artist']}.mp4"
+
+    @staticmethod
+    def store_playlist_to_file(playlist):
+        fd, filename = tempfile.mkstemp(suffix='.txt', text=True)
+        with os.fdopen(fd, 'w') as f:
+            f.writelines('\n'.join(playlist))
+        return filename
