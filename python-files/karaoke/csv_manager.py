@@ -44,7 +44,6 @@ class CsvManager:
                 video_name = self.convert_row_into_video_name(row)
                 selected_rows.append(video_name)
         return selected_rows
-    
+
     def convert_row_into_video_name(self, row):
         return f"{row['Track']} - {row['Artist']}.mp4"
-
