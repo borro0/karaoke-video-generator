@@ -1,6 +1,17 @@
 import mpv
 
 
+class Song:
+    """ This class represents a song played in MPV """
+
+    def __init__(self):
+        self.name = ""
+        self.percentage_played = 0
+
+    def isSongPlayed(self):
+        return self.percentage_played > 80.0
+
+
 class MpvManger:
     """ This class handles the playing of videos with MPV player """
 
@@ -8,38 +19,29 @@ class MpvManger:
         # This callback is called when song has played completely to store in csv file
         self.song_completed_callback = song_completed_callback
         self.video_directory = video_directory
-        self.player = mpv.MPV()
+        self.player = mpv.MPV(input_default_bindings=True, input_vo_keyboard=True, osc=True)
+        self.current_song = Song()
+
+        @self.player.property_observer('percent-pos')
+        def percent_pos_observer(_name, value):
+            if value is None:
+                self.current_song.percentage_played = 0
+            else:
+                self.current_song.percentage_played = value
 
     def play_playlist(self, playlist):
-        player = mpv.MPV(input_default_bindings=True, input_vo_keyboard=True, osc=True)
-
         print("appending list: ", playlist)
         for song in playlist:
-            player.playlist_append(f"{self.video_directory}/{song}")
+            self.player.playlist_append(f"{self.video_directory}/{song}")
 
-        player.playlist_pos = 0
+        self.player.playlist_pos = 0
+        while self.player.playlist_pos is not None:
+            song = playlist[self.player.playlist_pos]
+            self.current_song.name = song
+            print(song)
 
-        @player.property_observer('percent-pos')
-        def eof_observer(_name, value):
-            print("current pos: ", value)
+            self.player._set_property('pause', True)
+            self.player.wait_for_playback()
 
-        @player.property_observer('eof-reached')
-        def eof_observer(_name, value):
-            # Here, _value is either None if nothing is playing or a float containing
-            # fractional seconds since the beginning of the file.
-            print(f"eof reached {_name} {value} !")
-
-            pos = player._get_property('percent-pos')
-            print("current pos: ", pos)
-
-        while True:
-            # To modify the playlist, use player.playlist_{append,clear,move,remove}. player.playlist is read-only
-            print("calling playlist next")
-            # player.playlist_next()
-            print("waiting for playback")
-            player.wait_for_playback()
-            eof_reached = player._get_property('eof-reached')
-            print("eof-reached: ", eof_reached)
-        # self.song_completed_callback(song)
-
-    
+            if self.current_song.isSongPlayed():
+                self.song_completed_callback(song)
