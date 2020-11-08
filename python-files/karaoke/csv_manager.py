@@ -7,6 +7,8 @@ import datetime
 class CsvManager:
     "This class manages the reading of the CSV file, used as database to store all songs"
 
+    DATE_FORMAT = "%d-%m-%Y"
+
     def __init__(self, csv_file_location):
         self.csv_file_location = csv_file_location
         self.dict = self.read_csv_file(csv_file_location)
@@ -60,7 +62,7 @@ class CsvManager:
 
     def record_song_played(self, song, date=datetime.date.today()):
         track = self.get_title_from_song(song)
-        formatted_date = date.strftime("%d-%m-%Y")
+        formatted_date = date.strftime(self.DATE_FORMAT)
         print("formatted_date ", formatted_date)
         # lookup row
         # see if current date column exists
@@ -76,6 +78,46 @@ class CsvManager:
     def insert_date_column(self, date):
         for row in self.dict.values():
             self.dict[row['Track']].update({date: "FALSE"})
+
+        self.reorder_columns()
+
+    def reorder_columns(self):
+        fieldnames = self.get_field_names()
+        sorted_fieldnames = self.sort_fieldnames(fieldnames)
+
+        new_dict = {}
+        for row in self.dict.values():
+            new_row = {}
+            for fieldname in sorted_fieldnames:
+                new_row[fieldname] = row[fieldname]
+            new_dict[row['Track']] = new_row
+
+        self.dict = new_dict
+
+    def sort_fieldnames(self, fieldnames):
+        date_list = []
+        non_date_list = []
+        for fieldname in fieldnames:
+            if self.is_date(fieldname):
+                date_list.append(fieldname)
+            else:
+                non_date_list.append(fieldname)
+
+        sorted_date_list = self.sort_dates(date_list)
+        complete_list = non_date_list + sorted_date_list
+        return complete_list
+
+    def sort_dates(self, dates):
+        dates.sort(key=lambda date: datetime.datetime.strptime(date, self.DATE_FORMAT))
+        dates.reverse()
+        return dates
+
+    def is_date(self, date):
+        try:
+            datetime.datetime.strptime(date, self.DATE_FORMAT)
+            return True
+        except ValueError:
+            return False
 
     def write_to_csv_file(self):
         fieldnames = self.get_field_names()

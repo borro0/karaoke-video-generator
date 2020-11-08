@@ -24,6 +24,11 @@ def tracklist_bpm_file():
     return csv_file
 
 
+@pytest.fixture
+def csv_manager(tracklist_bpm_file):
+    return CsvManager(tracklist_bpm_file)
+
+
 def get_playlist_filename(color):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     return f"{dir_path}/csv_files/{color}_playlist.txt"
@@ -110,16 +115,23 @@ def test_get_title_from_song():
     assert CsvManager.get_title_from_song(song) == "More Than A Feeling"
 
 
-def test_insert_date_column(tracklist_bpm_file):
-    csv_manager = CsvManager(tracklist_bpm_file)
-    csv_manager.insert_date_column(datetime.date.today())
+def test_sort_fieldnames(csv_manager):
+    fieldnames = ["Track", "Artist", "Selectie", "Metal", "Boom", "Pop", "Date Added", "BPM",
+                  "Extra aandacht", "Shuffle?", "Actief", "Video", "8-11-2020", "1-11-2020", "1-1-2020", "12-12-2020"]
+
+    expected_fieldnames = ["Track", "Artist", "Selectie", "Metal", "Boom", "Pop", "Date Added", "BPM",
+                           "Extra aandacht", "Shuffle?", "Actief", "Video", "12-12-2020", "8-11-2020", "1-11-2020", "1-1-2020"]
+
+    sorted_fieldnames = csv_manager.sort_fieldnames(fieldnames)
+
+    assert sorted_fieldnames == expected_fieldnames
 
 
 def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
     actual_csv_file = f"{tmp_csv_files}/tracklist + bpm.csv"
     dir_path = os.path.dirname(os.path.realpath(__file__))
     target_csv_file = f"{dir_path}/csv_files/tracklist + bpm target.csv"
-    actual_csv_file = f"{dir_path}/csv_files/tracklist + bpm.csv" #TODO remove this
+    actual_csv_file = f"{dir_path}/csv_files/tracklist + bpm.csv"  # TODO remove this
     csv_manager = CsvManager(actual_csv_file)
 
     csv_manager.record_song_played(green_playlist[0], date=datetime.date(2020, 11, 22))
