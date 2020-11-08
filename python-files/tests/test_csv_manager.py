@@ -1,7 +1,7 @@
 import pytest
 import os
 import filecmp
-import tempfile
+import shutil
 
 from karaoke.csv_manager import CsvManager
 # Execute test with: pytest -s -k "csv_manager"
@@ -57,6 +57,19 @@ def compare_two_lists(list1, list2):
     return list1 == list2
 
 
+@pytest.fixture
+def tmp_csv_files(tmp_path):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    csv_files_folder = f"{dir_path}/csv_files"
+
+    src = csv_files_folder
+    dest = tmp_path / "csv_files"
+
+    destination = shutil.copytree(src, dest)
+
+    return destination
+
+
 def test_print_csv_file(tracklist_bpm_file):
     print("Csv file used for the: ", tracklist_bpm_file)
     csv_manager = CsvManager(tracklist_bpm_file)
@@ -89,3 +102,11 @@ def test_store_playlist_to_file(green_playlist):
     generated_playlist_actual = CsvManager.store_playlist_to_file(green_playlist)
 
     assert filecmp.cmp(green_playlist_file_expected, generated_playlist_actual)
+
+
+def test_record_song_played(tmp_csv_files):
+    csv_manager = CsvManager(f"{tmp_csv_files}/tracklist + bpm.csv")
+    # insert various songs, with various dates
+
+    # compare with expected file
+    csv_manager.record_song_played()
