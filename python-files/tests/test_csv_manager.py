@@ -29,13 +29,13 @@ def csv_manager(tracklist_bpm_file):
     return CsvManager(tracklist_bpm_file)
 
 
-def get_playlist_filename(color):
+def get_playlist_filename(name):
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    return f"{dir_path}/csv_files/{color}_playlist.txt"
+    return f"{dir_path}/csv_files/{name}_playlist.txt"
 
 
-def read_playlist(color):
-    file = get_playlist_filename(color)
+def read_playlist(name):
+    file = get_playlist_filename(name)
     with open(file) as f:
         content_list = f.read().splitlines()
 
@@ -101,6 +101,13 @@ def test_generate_green_playlist(tracklist_bpm_file, green_playlist):
     green_playlist_read = csv_manager.generate_green_playlist()
 
     assert compare_two_lists(green_playlist, green_playlist_read)
+
+
+def test_generate_metal_playlist(csv_manager):
+    metal_playlist_actual = csv_manager.get_playlist_by_name("Metal")
+    metal_playlist_expected = read_playlist("Metal")
+
+    assert metal_playlist_actual == metal_playlist_expected
 
 
 def test_store_playlist_to_file(green_playlist):
