@@ -121,7 +121,6 @@ class CsvManager:
 
     def write_to_csv_file(self):
         fieldnames = self.get_field_names()
-        print("fieldnames: ", fieldnames)
 
         with open(self.csv_file_location, "w", newline='') as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)

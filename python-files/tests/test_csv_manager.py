@@ -129,19 +129,16 @@ def test_sort_fieldnames(csv_manager):
 
 def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
     actual_csv_file = f"{tmp_csv_files}/tracklist + bpm.csv"
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    target_csv_file = f"{dir_path}/csv_files/tracklist + bpm target.csv"
-    actual_csv_file = f"{dir_path}/csv_files/tracklist + bpm.csv"  # TODO remove this
     csv_manager = CsvManager(actual_csv_file)
 
     csv_manager.record_song_played(green_playlist[0], date=datetime.date(2020, 11, 22))
-    # insert various songs, with various dates
     for song in green_playlist:
         csv_manager.record_song_played(song, date=datetime.date(2020, 11, 22))
 
     for song in red_playlist:
         csv_manager.record_song_played(song, date=datetime.date(2020, 11, 15))
 
-    # compare with expected file
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    target_csv_file = f"{dir_path}/csv_files/tracklist + bpm target.csv"
 
     assert filecmp.cmp(actual_csv_file, target_csv_file)
