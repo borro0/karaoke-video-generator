@@ -1,29 +1,30 @@
 import csv
 import tempfile
 import os
+import datetime
 
 
 class CsvManager:
     "This class manages the reading of the CSV file, used as database to store all songs"
 
     def __init__(self, csv_file_location):
-        self.rows = self.read_csv_file(csv_file_location)
+        self.dict = self.read_csv_file(csv_file_location)
 
     def read_csv_file(self, csv_file_location):
         with open(csv_file_location, mode='r') as csv_file:
             rowsReader = csv.DictReader(csv_file)
-            rows = []
+            dict = {}
             first_line = True
             for row in rowsReader:
                 if first_line:
                     first_line = False
                 else:
-                    rows.append(row)
-            return rows
+                    dict[row['Track']] = row
+            return dict
 
     def print_csv_file(self, csv_file_location):
         line_count = 0
-        for row in self.rows:
+        for row in self.dict.values():
             if line_count == 0:
                 print(f'Column names are {", ".join(row)}')
                 line_count += 1
@@ -42,7 +43,7 @@ class CsvManager:
 
     def generate_playlist_by_difficulty(self, difficulty):
         selected_rows = []
-        for row in self.rows:
+        for row in self.dict.values():
             if row["Video"] == "FALSE":
                 continue
             if row["Extra aandacht"] == difficulty:
@@ -59,3 +60,28 @@ class CsvManager:
         with os.fdopen(fd, 'w') as f:
             f.writelines('\n'.join(playlist))
         return filename
+
+    def record_song_played(self, song, date=datetime.date.today()):
+        track = self.get_title_from_song(song)
+        formatted_date = date.strftime("%d-%m-%Y")
+        print(formatted_date)
+        # lookup row
+        # see if current date column exists
+        if formatted_date not in self.dict[track]:
+            self.insert_date_column(formatted_date)
+
+        self.dict[track][formatted_date] = "TRUE"
+
+
+        # store in row
+
+        # update csv file
+        pass
+
+    def insert_date_column(self, date):
+        for row in self.dict.values():
+            self.dict[row['Track']].update({date: "FALSE"})
+
+    @staticmethod
+    def get_title_from_song(song):
+        return song.split(" - ")[0]

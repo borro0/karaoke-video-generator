@@ -2,6 +2,7 @@ import pytest
 import os
 import filecmp
 import shutil
+import datetime
 
 from karaoke.csv_manager import CsvManager
 # Execute test with: pytest -s -k "csv_manager"
@@ -104,9 +105,22 @@ def test_store_playlist_to_file(green_playlist):
     assert filecmp.cmp(green_playlist_file_expected, generated_playlist_actual)
 
 
-def test_record_song_played(tmp_csv_files):
-    csv_manager = CsvManager(f"{tmp_csv_files}/tracklist + bpm.csv")
-    # insert various songs, with various dates
+def test_get_title_from_song():
+    song = "More Than A Feeling - Boston.mp4"
+    assert CsvManager.get_title_from_song(song) == "More Than A Feeling"
 
-    # compare with expected file
-    csv_manager.record_song_played()
+
+# def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
+#     actual_csv_file = f"{tmp_csv_files}/tracklist + bpm.csv"
+#     dir_path = os.path.dirname(os.path.realpath(__file__))
+#     target_csv_file = f"{dir_path}/csv_files/tracklist + bpm target.csv"
+#     csv_manager = CsvManager(actual_csv_file)
+#     # insert various songs, with various dates
+#     for song in green_playlist:
+#         csv_manager.record_song_played(song, date=datetime.date(2020, 11, 22))
+
+#     for song in red_playlist:
+#         csv_manager.record_song_played(song, date=datetime.date(2020, 11, 22))
+
+#     # compare with expected file
+#     assert filecmp.cmp(actual_csv_file, target_csv_file)
