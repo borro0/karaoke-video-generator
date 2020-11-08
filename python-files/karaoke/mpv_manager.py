@@ -46,3 +46,5 @@ class MpvManger:
             if self.current_song.isSongPlayed():
                 print("Song is finished playing, call callback")
                 self.song_completed_callback(song)
+            else:
+                print("Song is not played long enough to be considered finished")
