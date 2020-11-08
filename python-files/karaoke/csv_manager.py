@@ -61,19 +61,19 @@ class CsvManager:
         return filename
 
     def record_song_played(self, song, date=datetime.date.today()):
+        """
+        Put record in csv file that song is played.
+        If there exists a column of current day, set field to TRUE.
+        If such a column does not exist yet, create one.
+        """
         track = self.get_title_from_song(song)
         formatted_date = date.strftime(self.DATE_FORMAT)
-        print("formatted_date ", formatted_date)
-        # lookup row
-        # see if current date column exists
         if formatted_date not in self.dict[track]:
             self.insert_date_column(formatted_date)
 
-        # store in row
         self.dict[track][formatted_date] = "TRUE"
 
-        # update csv file
-        self.write_to_csv_file()
+        self.write_changes_to_csv_file()
 
     def insert_date_column(self, date):
         for row in self.dict.values():
@@ -119,7 +119,7 @@ class CsvManager:
         except ValueError:
             return False
 
-    def write_to_csv_file(self):
+    def write_changes_to_csv_file(self):
         fieldnames = self.get_field_names()
 
         with open(self.csv_file_location, "w", newline='') as f:

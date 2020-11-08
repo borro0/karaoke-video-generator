@@ -6,20 +6,27 @@ import os
 VIDEO_DIRECTORY = r'C:\Users\boris\Google Drive\Live Karaoke Band\Lyric-videos\rendered videos'
 
 
-def main():
-    current_file_directory = os.path.dirname(os.path.realpath(__file__))
-    tracklist_csv_file = f"{current_file_directory}/../tests/csv_files/tracklist + bpm.csv"
-    print("Going for tracklist ", tracklist_csv_file)
-    csv_manager = CsvManager(tracklist_csv_file)
-    mpv_manager = MpvManger(song_completed_callback, VIDEO_DIRECTORY)
+class Karaoke:
+    """
+    This class is basically the main class.
+    It uses all other classes to execute commands inserted from the ui
+    """
 
-    playlist = csv_manager.generate_red_playlist()
-    mpv_manager.play_playlist(playlist)
+    def __init__(self):
+        # setup csv manager
+        current_file_directory = os.path.dirname(os.path.realpath(__file__))
+        tracklist_csv_file = f"{current_file_directory}/../tests/csv_files/tracklist + bpm.csv"
+        self.csv_manager = CsvManager(tracklist_csv_file)
 
+        # setup mpv manager
+        song_completed_callback = self.csv_manager.record_song_played
+        self.mpv_manager = MpvManger(song_completed_callback, VIDEO_DIRECTORY)
 
-def song_completed_callback(song):
-    print(song, " is finished playing")
+    def test(self):
+        playlist = self.csv_manager.generate_red_playlist()
+        self.mpv_manager.play_playlist(playlist)
 
 
 if __name__ == '__main__':
-    main()
+    karaoke = Karaoke()
+    karaoke.test()
