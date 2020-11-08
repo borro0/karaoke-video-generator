@@ -44,4 +44,5 @@ class MpvManger:
             self.player.wait_for_playback()
 
             if self.current_song.isSongPlayed():
+                print("Song is finished playing, call callback")
                 self.song_completed_callback(song)

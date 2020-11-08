@@ -115,6 +115,12 @@ def test_get_title_from_song():
     assert CsvManager.get_title_from_song(song) == "More Than A Feeling"
 
 
+def test_convert_date_to_stringt(csv_manager):
+    date = datetime.date(2020, 1, 1)
+    date_after_conversion = csv_manager.convert_date_to_string(date)
+    assert date_after_conversion == "1-1-2020"
+
+
 def test_sort_fieldnames(csv_manager):
     fieldnames = ["Track", "Artist", "Selectie", "Metal", "Boom", "Pop", "Date Added", "BPM",
                   "Extra aandacht", "Shuffle?", "Actief", "Video", "8-11-2020", "1-11-2020", "1-1-2020", "12-12-2020"]

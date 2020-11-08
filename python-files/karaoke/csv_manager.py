@@ -67,13 +67,23 @@ class CsvManager:
         If such a column does not exist yet, create one.
         """
         track = self.get_title_from_song(song)
-        formatted_date = date.strftime(self.DATE_FORMAT)
+        print("Insert ", track)
+        formatted_date = self.convert_date_to_string(date)
         if formatted_date not in self.dict[track]:
+            print("No column exists for ", formatted_date, " creating one now.")
             self.insert_date_column(formatted_date)
 
         self.dict[track][formatted_date] = "TRUE"
-
         self.write_changes_to_csv_file()
+
+    @staticmethod
+    def get_title_from_song(song):
+        return song.split(" - ")[0]
+
+    def convert_date_to_string(self, date):
+        date = date.strftime(self.DATE_FORMAT)
+        date_withouth_leading_zeros = date.lstrip("0").replace(" 0", " ").replace("-0", "-")
+        return date_withouth_leading_zeros
 
     def insert_date_column(self, date):
         for row in self.dict.values():
@@ -132,7 +142,3 @@ class CsvManager:
         first_row = list(self.dict.values())[0]
         keys_or_first_row = first_row.keys()
         return list(keys_or_first_row)
-
-    @staticmethod
-    def get_title_from_song(song):
-        return song.split(" - ")[0]
