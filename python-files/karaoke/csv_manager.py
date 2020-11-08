@@ -8,18 +8,15 @@ class CsvManager:
     "This class manages the reading of the CSV file, used as database to store all songs"
 
     def __init__(self, csv_file_location):
+        self.csv_file_location = csv_file_location
         self.dict = self.read_csv_file(csv_file_location)
 
     def read_csv_file(self, csv_file_location):
         with open(csv_file_location, mode='r') as csv_file:
             rowsReader = csv.DictReader(csv_file)
             dict = {}
-            first_line = True
             for row in rowsReader:
-                if first_line:
-                    first_line = False
-                else:
-                    dict[row['Track']] = row
+                dict[row['Track']] = row
             return dict
 
     def print_csv_file(self, csv_file_location):
@@ -64,23 +61,36 @@ class CsvManager:
     def record_song_played(self, song, date=datetime.date.today()):
         track = self.get_title_from_song(song)
         formatted_date = date.strftime("%d-%m-%Y")
-        print(formatted_date)
+        print("formatted_date ", formatted_date)
         # lookup row
         # see if current date column exists
         if formatted_date not in self.dict[track]:
             self.insert_date_column(formatted_date)
 
+        # store in row
         self.dict[track][formatted_date] = "TRUE"
 
-
-        # store in row
-
         # update csv file
-        pass
+        self.write_to_csv_file()
 
     def insert_date_column(self, date):
         for row in self.dict.values():
             self.dict[row['Track']].update({date: "FALSE"})
+
+    def write_to_csv_file(self):
+        fieldnames = self.get_field_names()
+        print("fieldnames: ", fieldnames)
+
+        with open(self.csv_file_location, "w", newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            for row in self.dict.values():
+                writer.writerow(row)
+
+    def get_field_names(self):
+        first_row = list(self.dict.values())[0]
+        keys_or_first_row = first_row.keys()
+        return list(keys_or_first_row)
 
     @staticmethod
     def get_title_from_song(song):

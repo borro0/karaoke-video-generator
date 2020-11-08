@@ -110,17 +110,26 @@ def test_get_title_from_song():
     assert CsvManager.get_title_from_song(song) == "More Than A Feeling"
 
 
-# def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
-#     actual_csv_file = f"{tmp_csv_files}/tracklist + bpm.csv"
-#     dir_path = os.path.dirname(os.path.realpath(__file__))
-#     target_csv_file = f"{dir_path}/csv_files/tracklist + bpm target.csv"
-#     csv_manager = CsvManager(actual_csv_file)
-#     # insert various songs, with various dates
-#     for song in green_playlist:
-#         csv_manager.record_song_played(song, date=datetime.date(2020, 11, 22))
+def test_insert_date_column(tracklist_bpm_file):
+    csv_manager = CsvManager(tracklist_bpm_file)
+    csv_manager.insert_date_column(datetime.date.today())
 
-#     for song in red_playlist:
-#         csv_manager.record_song_played(song, date=datetime.date(2020, 11, 22))
 
-#     # compare with expected file
-#     assert filecmp.cmp(actual_csv_file, target_csv_file)
+def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
+    actual_csv_file = f"{tmp_csv_files}/tracklist + bpm.csv"
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    target_csv_file = f"{dir_path}/csv_files/tracklist + bpm target.csv"
+    actual_csv_file = f"{dir_path}/csv_files/tracklist + bpm.csv" #TODO remove this
+    csv_manager = CsvManager(actual_csv_file)
+
+    csv_manager.record_song_played(green_playlist[0], date=datetime.date(2020, 11, 22))
+    # insert various songs, with various dates
+    for song in green_playlist:
+        csv_manager.record_song_played(song, date=datetime.date(2020, 11, 22))
+
+    for song in red_playlist:
+        csv_manager.record_song_played(song, date=datetime.date(2020, 11, 15))
+
+    # compare with expected file
+
+    assert filecmp.cmp(actual_csv_file, target_csv_file)
