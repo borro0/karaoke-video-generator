@@ -139,6 +139,6 @@ def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
         csv_manager.record_song_played(song, date=datetime.date(2020, 11, 15))
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    target_csv_file = f"{dir_path}/csv_files/tracklist + bpm target.csv"
+    target_csv_file = f"{dir_path}/csv_files/tracklist + bpm 4 dates.csv"
 
     assert filecmp.cmp(actual_csv_file, target_csv_file)
