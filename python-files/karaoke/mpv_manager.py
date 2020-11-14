@@ -9,7 +9,7 @@ class Song:
         self.percentage_played = 0
 
     def isSongPlayed(self):
-        return self.percentage_played > 80.0
+        return self.percentage_played > 80.0 if self.percentage_played is not None else False
 
 
 class MpvManger:
@@ -25,9 +25,10 @@ class MpvManger:
         @self.player.property_observer('percent-pos')
         def percent_pos_observer(_name, value):
             if value is None:
-                self.current_song.percentage_played = 0
+                print("POS returned None value")
             else:
                 self.current_song.percentage_played = value
+                # print("POS returned: ", value)
 
     def play_playlist(self, playlist):
         print("appending list: ", playlist)
