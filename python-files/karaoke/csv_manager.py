@@ -64,7 +64,6 @@ class CsvManager:
                 selected_rows.append(video_name)
         return selected_rows
 
-
     @staticmethod
     def store_playlist_to_file(playlist):
         fd, filename = tempfile.mkstemp(suffix='.txt', text=True)
@@ -139,6 +138,7 @@ class CsvManager:
             datetime.datetime.strptime(date, self.DATE_FORMAT)
             return True
         except ValueError:
+            print(date, "is not a date")
             return False
 
     def write_changes_to_csv_file(self):
@@ -154,3 +154,30 @@ class CsvManager:
         first_row = list(self.get_all_rows())[0]
         keys_or_first_row = first_row.keys()
         return list(keys_or_first_row)
+
+    def get_all_playlist_names(self):
+        field_names = self.get_field_names()
+        field_names = self.remove_pre_defined_non_playlist_fields(field_names)
+        field_names = self.remove_dates_from_field_names(field_names)
+        field_names = field_names + self.get_all_colored_playlists_names()
+        print(field_names)
+        return field_names
+
+    def remove_pre_defined_non_playlist_fields(self, field_names):
+        non_playlist_fields = ["Track", "Artist", "Selectie", "Date Added",
+                               "BPM", "Extra aandacht", "Shuffle?", "Actief", "Video"]
+        for field in non_playlist_fields:
+            try:
+                field_names.remove(field)
+            except ValueError:
+                print("Tried to remove ", field, " from list, but it was not a member of list")
+        return field_names
+
+    def remove_dates_from_field_names(self, field_names):
+        for item in list(field_names):
+            if self.is_date(item):
+                field_names.remove(item)
+        return field_names
+
+    def get_all_colored_playlists_names(self):
+        return ["red", "yellow", "green"]
