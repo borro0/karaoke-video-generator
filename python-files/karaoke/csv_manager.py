@@ -21,9 +21,12 @@ class CsvManager:
                 dict[row['Track']] = row
             return dict
 
+    def get_all_rows(self):
+        return self.dict.values()
+
     def print_csv_file(self, csv_file_location):
         line_count = 0
-        for row in self.dict.values():
+        for row in self.get_all_rows():
             if line_count == 0:
                 print(f'Column names are {", ".join(row)}')
                 line_count += 1
@@ -42,7 +45,7 @@ class CsvManager:
 
     def generate_playlist_by_difficulty(self, difficulty):
         selected_rows = []
-        for row in self.dict.values():
+        for row in self.get_all_rows():
             if row["Video"] == "FALSE":
                 continue
             if row["Extra aandacht"] == difficulty:
@@ -52,6 +55,15 @@ class CsvManager:
 
     def convert_row_into_video_name(self, row):
         return f"{row['Track']} - {row['Artist']}.mp4"
+
+    def get_playlist_by_name(self, name):
+        selected_rows = []
+        for row in self.get_all_rows():
+            if row[name] == "TRUE":
+                video_name = self.convert_row_into_video_name(row)
+                selected_rows.append(video_name)
+        return selected_rows
+
 
     @staticmethod
     def store_playlist_to_file(playlist):
@@ -86,7 +98,7 @@ class CsvManager:
         return date_withouth_leading_zeros
 
     def insert_date_column(self, date):
-        for row in self.dict.values():
+        for row in self.get_all_rows():
             self.dict[row['Track']].update({date: "FALSE"})
 
         self.reorder_columns()
@@ -96,7 +108,7 @@ class CsvManager:
         sorted_fieldnames = self.sort_fieldnames(fieldnames)
 
         new_dict = {}
-        for row in self.dict.values():
+        for row in self.get_all_rows():
             new_row = {}
             for fieldname in sorted_fieldnames:
                 new_row[fieldname] = row[fieldname]
@@ -135,10 +147,10 @@ class CsvManager:
         with open(self.csv_file_location, "w", newline='') as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
-            for row in self.dict.values():
+            for row in self.get_all_rows():
                 writer.writerow(row)
 
     def get_field_names(self):
-        first_row = list(self.dict.values())[0]
+        first_row = list(self.get_all_rows())[0]
         keys_or_first_row = first_row.keys()
         return list(keys_or_first_row)
