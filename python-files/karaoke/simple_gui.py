@@ -33,11 +33,9 @@ while True:
         break
     # Folder name was filled in, make a list of files in the folder
     if event == "-FILE LIST-":  # A file was chosen from the listbox
-        try:
-            playlist_name = values["-FILE LIST-"][0]
-            print(playlist_name)
-            karaoke.play_playlist(playlist_name)
-        except:
-            pass
+        playlist_name = values["-FILE LIST-"][0]
+        print(playlist_name)
+        karaoke = Karaoke()  # Create new karaoke instance every time
+        karaoke.play_playlist(playlist_name)
 
 window.close()

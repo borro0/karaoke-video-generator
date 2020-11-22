@@ -35,6 +35,14 @@ class MpvManger:
         for song in playlist:
             self.player.playlist_append(f"{self.video_directory}/{song}")
 
+        try:
+            self.loop_through_playlist(playlist)
+        except mpv.ShutdownError:
+            print("Player has been shutdown")
+            self.player.terminate()
+            return
+
+    def loop_through_playlist(self, playlist):
         self.player.playlist_pos = 0
         while self.player.playlist_pos is not None:
             song = playlist[self.player.playlist_pos]
