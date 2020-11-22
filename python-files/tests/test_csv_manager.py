@@ -11,7 +11,7 @@ from karaoke.csv_manager import CsvManager
 @pytest.fixture
 def basic_file():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    csv_file = f"{dir_path}/csv_files/basic.csv"
+    csv_file = f"{dir_path}/test_files/basic.csv"
 
     return csv_file
 
@@ -19,7 +19,7 @@ def basic_file():
 @pytest.fixture
 def tracklist_bpm_file():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    csv_file = f"{dir_path}/csv_files/tracklist + bpm.csv"
+    csv_file = f"{dir_path}/test_files/tracklist + bpm.csv"
 
     return csv_file
 
@@ -31,7 +31,7 @@ def csv_manager(tracklist_bpm_file):
 
 def get_playlist_filename(name):
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    return f"{dir_path}/csv_files/{name}_playlist.txt"
+    return f"{dir_path}/test_files/{name}_playlist.txt"
 
 
 def read_playlist(name):
@@ -64,12 +64,12 @@ def compare_two_lists(list1, list2):
 
 
 @pytest.fixture
-def tmp_csv_files(tmp_path):
+def tmp_test_files(tmp_path):
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    csv_files_folder = f"{dir_path}/csv_files"
+    test_files_folder = f"{dir_path}/test_files"
 
-    src = csv_files_folder
-    dest = tmp_path / "csv_files"
+    src = test_files_folder
+    dest = tmp_path / "test_files"
 
     destination = shutil.copytree(src, dest)
 
@@ -140,8 +140,8 @@ def test_sort_fieldnames(csv_manager):
     assert sorted_fieldnames == expected_fieldnames
 
 
-def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
-    actual_csv_file = f"{tmp_csv_files}/tracklist + bpm.csv"
+def test_record_song_played(tmp_test_files, green_playlist, red_playlist):
+    actual_csv_file = f"{tmp_test_files}/tracklist + bpm.csv"
     csv_manager = CsvManager(actual_csv_file)
 
     csv_manager.record_song_played(green_playlist[0], date=datetime.date(2020, 11, 22))
@@ -152,7 +152,7 @@ def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
         csv_manager.record_song_played(song, date=datetime.date(2020, 11, 15))
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    target_csv_file = f"{dir_path}/csv_files/tracklist + bpm 4 dates.csv"
+    target_csv_file = f"{dir_path}/test_files/tracklist + bpm 4 dates.csv"
 
     assert filecmp.cmp(actual_csv_file, target_csv_file)
 

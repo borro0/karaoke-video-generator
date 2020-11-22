@@ -2,6 +2,9 @@ import PySimpleGUI as sg
 
 from karaoke import Karaoke
 
+VIDEO_DIRECTORY = r'C:\Users\boris\Google Drive\Live Karaoke Band\Lyric-videos\rendered videos'
+TRACKLIST_FILE = r'D:\Documents\karaoke-video-generator\python-files\tests\csv_files\tracklist + bpm.csv'
+
 karaoke = Karaoke()
 playlists = karaoke.get_all_playlists()
 
