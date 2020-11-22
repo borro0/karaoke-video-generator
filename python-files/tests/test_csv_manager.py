@@ -156,9 +156,9 @@ def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
 
     assert filecmp.cmp(actual_csv_file, target_csv_file)
 
+
 def test_get_all_playlist(csv_manager):
     expected_playlist_names = ["Metal", "Classic", "Pop", "red", "yellow", "green"]
     playlist_names = csv_manager.get_all_playlist_names()
 
     assert expected_playlist_names == playlist_names
-

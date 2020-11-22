@@ -30,9 +30,13 @@ class CsvManager:
             if line_count == 0:
                 print(f'Column names are {", ".join(row)}')
                 line_count += 1
-            print(f'{row["Track"]}\t\t\t {row["Artist"]}.')
+            self.print_row(row)
             line_count += 1
         print(f'Processed {line_count} lines.')
+
+    @staticmethod
+    def print_row(row):
+        print(f'{row["Track"]}\t\t\t {row["Artist"]}.')
 
     def generate_red_playlist(self):
         return self.generate_playlist_by_difficulty("o")
@@ -46,11 +50,10 @@ class CsvManager:
     def generate_playlist_by_difficulty(self, difficulty):
         selected_rows = []
         for row in self.get_all_rows():
-            if row["Video"] == "FALSE":
-                continue
             if row["Extra aandacht"] == difficulty:
                 video_name = self.convert_row_into_video_name(row)
                 selected_rows.append(video_name)
+                self.print_row(row)
         return selected_rows
 
     def convert_row_into_video_name(self, row):

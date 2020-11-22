@@ -1,7 +1,10 @@
 import PySimpleGUI as sg
-import os.path
 
-# First the window layout in 2 columns
+from karaoke import Karaoke
+
+karaoke = Karaoke()
+playlists = karaoke.get_all_playlists()
+
 
 file_list_column = [
     [
@@ -9,7 +12,7 @@ file_list_column = [
     ],
     [
         sg.Listbox(
-            values=["playlist1", "playlist2"], enable_events=True, size=(40, 20), key="-FILE LIST-"
+            values=playlists, enable_events=True, size=(40, 20), key="-FILE LIST-"
         )
     ],
 ]

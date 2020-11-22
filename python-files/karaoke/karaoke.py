@@ -26,6 +26,13 @@ class Karaoke:
         playlist = self.csv_manager.generate_red_playlist()
         self.mpv_manager.play_playlist(playlist)
 
+    def get_all_playlists(self):
+        return self.csv_manager.get_all_playlist_names()
+    
+    def play_playlist(self, playlist_name):
+        playlist = self.csv_manager.gener
+        self.mpv_manager.play_playlist()
+
 
 if __name__ == '__main__':
     karaoke = Karaoke()
