@@ -3,13 +3,28 @@ import PySimpleGUI as sg
 from karaoke import Karaoke
 
 VIDEO_DIRECTORY = r'C:\Users\boris\Google Drive\Live Karaoke Band\Lyric-videos\rendered videos'
-TRACKLIST_FILE = r'D:\Documents\karaoke-video-generator\python-files\tests\csv_files\tracklist + bpm.csv'
+TRACKLIST_FILE = r'D:\Documents\karaoke-video-generator\python-files\tests\test_files\tracklist + bpm.csv'
 
 karaoke = Karaoke()
-playlists = karaoke.get_all_playlists()
+if karaoke.has_valid_config():
+    playlists = karaoke.get_all_playlists()
+else:
+    playlists = []
 
+video_folder = karaoke.get_video_dir()
+tracklist_file = karaoke.get_tracklist_file()
 
 file_list_column = [
+    [
+        sg.Text("Video Folder"),
+        sg.In(size=(25, 1), enable_events=True, key="-VIDEO FOLDER-", default_text=video_folder),
+        sg.FolderBrowse(),
+    ],
+    [
+        sg.Text("Tracklist file"),
+        sg.In(size=(25, 1), enable_events=True, key="-TRACKLIST FILE-", default_text=tracklist_file),
+        sg.FileBrowse(),
+    ],
     [
         sg.Text("Select playlist"),
     ],
@@ -40,5 +55,11 @@ while True:
         print(playlist_name)
         karaoke = Karaoke()  # Create new karaoke instance every time
         karaoke.play_playlist(playlist_name)
+    if event == "-VIDEO FOLDER-":
+        folder = values["-VIDEO FOLDER-"]
+        print(folder)
+    if event == "-TRACKLIST FILE-":
+        tracklist_file = values["-TRACKLIST FILE-"]
+        print(tracklist_file)
 
 window.close()

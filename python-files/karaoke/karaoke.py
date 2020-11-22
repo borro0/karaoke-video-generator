@@ -1,5 +1,7 @@
 from csv_manager import CsvManager
 from mpv_manager import MpvManger
+from config_manager import ConfigManager
+
 import os
 
 VIDEO_DIRECTORY = r'C:\Users\boris\Google Drive\Live Karaoke Band\Lyric-videos\rendered videos'
@@ -10,11 +12,33 @@ class Karaoke:
     """
     This class is basically the main class.
     It uses all other classes to execute commands inserted from the ui
+    If it has a valid config, it will start
+    If it does not have a valid config
     """
 
-    def __init__(self, video_dir=VIDEO_DIRECTORY, tracklist_file=TRACKLIST_FILE):
+    def __init__(self, video_dir=VIDEO_DIRECTORY, tracklist=TRACKLIST_FILE):
+        self.config_manager = ConfigManager()
+        
+        if self. config_manager.has_valid_config():
+            print("Valid config file is detected")
+            video_dir = self.config_manager.get_config('PATHS', 'video_directory')
+            tracklist = self.config_manager.get_config('PATHS', 'tracklist')
+            self.setup(video_dir, tracklist)
+        else:
+            print("No valid config file is found")
+
+    def has_valid_config(self):
+        return self.config_manager.has_valid_config()
+
+    def get_video_dir(self):
+        return self.config_manager.get_config('PATHS', 'video_directory')
+
+    def get_tracklist_file(self):
+        return self.config_manager.get_config('PATHS', 'video_directory')
+
+    def setup(self, video_dir, tracklist):
         # setup csv manager
-        self.csv_manager = CsvManager(tracklist_file)
+        self.csv_manager = CsvManager(tracklist)
 
         # setup mpv manager
         song_completed_callback = self.csv_manager.record_song_played
@@ -32,7 +56,7 @@ class Karaoke:
         self.mpv_manager.play_playlist(playlist)
 
 
-
 if __name__ == '__main__':
     karaoke = Karaoke()
-    karaoke.test()
+    if karaoke.has_valid_config():
+        karaoke.test()

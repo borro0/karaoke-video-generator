@@ -30,16 +30,18 @@ def test_get_default_values(tmp_test_files):
 
 def test_is_no_config_file_available(tmp_test_files):
     config_manager = ConfigManager()
-    assert config_manager.is_valid_config_file_available() is False
+    assert config_manager.has_valid_config() is False
 
 
-def test_is_valid_config_file_available(tmp_test_files):
+def test_has_valid_config(tmp_test_files):
     config_manager = ConfigManager(f"{tmp_test_files}/config.ini")
-    assert config_manager.is_valid_config_file_available() is True
+    assert config_manager.has_valid_config() is True
 
 
 def test_is_no_config_file_available(tmp_test_files):
-    config_manager = ConfigManager()
+    config_file = f"{tmp_test_files}/test.ini"
+    config_manager = ConfigManager(config_file)
+
     test_dir = r'C:\Test'
     test_tracklist = r'C:\Test\tracklist.csv'
     config_manager.set_config('PATHS', 'video_directory', test_dir)
