@@ -39,33 +39,50 @@ class CsvManager:
         print(f'{row["Track"]}\t\t\t {row["Artist"]}.')
 
     def generate_red_playlist(self):
-        return self.generate_playlist_by_difficulty("o")
+        return self.generate_playlist_by_difficulty("red")
 
     def generate_yellow_playlist(self):
-        return self.generate_playlist_by_difficulty("v")
+        return self.generate_playlist_by_difficulty("yellow")
 
     def generate_green_playlist(self):
-        return self.generate_playlist_by_difficulty("g")
+        return self.generate_playlist_by_difficulty("green")
 
-    def generate_playlist_by_difficulty(self, difficulty):
+    def generate_playlist_by_difficulty(self, difficulty_name):
         selected_rows = []
+        difficulty_char = self.convert_difficulty_name_to_single_char(difficulty_name)
         for row in self.get_all_rows():
-            if row["Extra aandacht"] == difficulty:
+            if row["Extra aandacht"] == difficulty_char:
                 video_name = self.convert_row_into_video_name(row)
                 selected_rows.append(video_name)
                 self.print_row(row)
         return selected_rows
 
+    @staticmethod
+    def convert_difficulty_name_to_single_char(difficulty_name):
+        difficulty_dict = {
+            "green": "g",
+            "yellow": "v",
+            "red": "o"
+        }
+        return difficulty_dict[difficulty_name]
+
     def convert_row_into_video_name(self, row):
         return f"{row['Track']} - {row['Artist']}.mp4"
 
     def get_playlist_by_name(self, name):
+        if self.is_playlist_name_a_difficulty(name):
+            return self.generate_playlist_by_difficulty(name)
+
         selected_rows = []
         for row in self.get_all_rows():
             if row[name] == "TRUE":
                 video_name = self.convert_row_into_video_name(row)
                 selected_rows.append(video_name)
         return selected_rows
+
+    @staticmethod
+    def is_playlist_name_a_difficulty(name):
+        return name in ["green", "yellow", "red"]
 
     @staticmethod
     def store_playlist_to_file(playlist):

@@ -30,8 +30,8 @@ class Karaoke:
         return self.csv_manager.get_all_playlist_names()
     
     def play_playlist(self, playlist_name):
-        playlist = self.csv_manager.gener
-        self.mpv_manager.play_playlist()
+        playlist = self.csv_manager.get_playlist_by_name(playlist_name)
+        self.mpv_manager.play_playlist(playlist)
 
 
 if __name__ == '__main__':

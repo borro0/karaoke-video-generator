@@ -162,3 +162,7 @@ def test_get_all_playlist(csv_manager):
     playlist_names = csv_manager.get_all_playlist_names()
 
     assert expected_playlist_names == playlist_names
+
+def test_get_difficulty_playlist_by_name(csv_manager, green_playlist, red_playlist, yellow_playlist):
+    received_playlist = csv_manager.get_playlist_by_name("green")
+    assert compare_two_lists(received_playlist, green_playlist)
