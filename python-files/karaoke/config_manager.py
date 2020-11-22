@@ -19,7 +19,7 @@ class ConfigManager:
     def has_valid_config(self):
         self.read_config()
         video_dir = self.get_config('PATHS', 'video_directory')
-        tracklist = self.get_config('PATHS', 'tracklist')
+        tracklist = self.get_config('PATHS', 'tracklist_file')
 
         return os.path.exists(video_dir) and os.path.exists(tracklist)
 

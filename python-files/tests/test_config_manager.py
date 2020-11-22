@@ -24,7 +24,7 @@ def test_get_default_values(tmp_test_files):
     video_dir = config_manager.get_config('PATHS', 'video_directory')
     assert video_dir == r'C:\Users\boris\Google Drive\Live Karaoke Band\Lyric-videos\rendered videos'
 
-    tracklist_file = config_manager.get_config('PATHS', 'tracklist')
+    tracklist_file = config_manager.get_config('PATHS', 'tracklist_file')
     assert tracklist_file == r'D:\Documents\karaoke-video-generator\python-files\tests\test_files\tracklist + bpm.csv'
 
 
@@ -45,10 +45,10 @@ def test_is_no_config_file_available(tmp_test_files):
     test_dir = r'C:\Test'
     test_tracklist = r'C:\Test\tracklist.csv'
     config_manager.set_config('PATHS', 'video_directory', test_dir)
-    config_manager.set_config('PATHS', 'tracklist', test_tracklist)
+    config_manager.set_config('PATHS', 'tracklist_file', test_tracklist)
 
     actual_dir = config_manager.get_config('PATHS', 'video_directory')
     assert actual_dir == test_dir
 
-    actual_tracklist = config_manager.get_config('PATHS', 'tracklist')
+    actual_tracklist = config_manager.get_config('PATHS', 'tracklist_file')
     assert actual_tracklist == test_tracklist
