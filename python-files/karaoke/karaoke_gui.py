@@ -8,7 +8,7 @@ if karaoke.has_valid_config():
 else:
     playlists = []
 
-video_folder = karaoke.get_video_dir()
+video_folder = karaoke.get_video_directory()
 tracklist_file = karaoke.get_tracklist_file()
 
 file_list_column = [
@@ -55,8 +55,13 @@ while True:
     if event == "-VIDEO FOLDER-":
         folder = values["-VIDEO FOLDER-"]
         print(folder)
+        karaoke.set_video_directory(folder)
     if event == "-TRACKLIST FILE-":
         tracklist_file = values["-TRACKLIST FILE-"]
         print(tracklist_file)
+        karaoke.set_tracklist_file(tracklist_file)
+        if karaoke.has_valid_config():
+            playlists = karaoke.get_all_playlists()
+            window["-FILE LIST-"].update(playlists)
 
 window.close()

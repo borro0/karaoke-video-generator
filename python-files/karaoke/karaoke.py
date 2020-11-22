@@ -30,10 +30,10 @@ class Karaoke:
     def has_valid_config(self):
         return self.config_manager.has_valid_config()
 
-    def get_video_dir(self):
+    def get_video_directory(self):
         return self.config_manager.get_config('PATHS', 'video_directory')
     
-    def set_video_dir(self, video_dir):
+    def set_video_directory(self, video_dir):
         return self.config_manager.set_config('PATHS', 'video_directory', video_dir)
 
     def get_tracklist_file(self):
