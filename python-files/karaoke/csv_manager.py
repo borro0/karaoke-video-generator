@@ -2,7 +2,7 @@ import csv
 import tempfile
 import os
 import datetime
-
+import random
 
 class CsvManager:
     "This class manages the reading of the CSV file, used as database to store all songs"
@@ -71,16 +71,20 @@ class CsvManager:
     def convert_row_into_video_name(self, row):
         return f"{row['Track']} - {row['Artist']}.mp4"
 
-    def get_playlist_by_name(self, name):
+    def get_playlist_by_name(self, name, shuffle=False):
+        playlist = []
         if self.is_playlist_name_a_difficulty(name):
-            return self.generate_playlist_by_difficulty(name)
-
-        selected_rows = []
-        for row in self.get_all_rows():
-            if row[name] == self.TRUE_CSV_FIELD_CONTENT_STRING:
-                video_name = self.convert_row_into_video_name(row)
-                selected_rows.append(video_name)
-        return selected_rows
+            playlist = self.generate_playlist_by_difficulty(name)
+        else:
+            for row in self.get_all_rows():
+                if row[name] == self.TRUE_CSV_FIELD_CONTENT_STRING:
+                    video_name = self.convert_row_into_video_name(row)
+                    playlist.append(video_name)
+        
+        if shuffle:
+            random.shuffle(playlist)
+        
+        return playlist
 
     @staticmethod
     def is_playlist_name_a_difficulty(name):

@@ -165,6 +165,16 @@ def test_get_all_playlist(csv_manager):
 
     assert expected_playlist_names == playlist_names
 
-def test_get_difficulty_playlist_by_name(csv_manager, green_playlist, red_playlist, yellow_playlist):
+def test_get_difficulty_playlist_by_name(csv_manager, green_playlist):
     received_playlist = csv_manager.get_playlist_by_name("green")
     assert compare_two_lists(received_playlist, green_playlist)
+
+def test_get_shuffled_playlist(csv_manager):
+    shuffled_playlist = csv_manager.get_playlist_by_name("green", shuffle=True)
+    unshuffled_playlist = csv_manager.get_playlist_by_name("green")
+    assert shuffled_playlist != unshuffled_playlist
+
+    # Sort both playlist, they should be equal now
+    shuffled_playlist.sort()
+    unshuffled_playlist.sort()
+    assert shuffled_playlist == unshuffled_playlist
