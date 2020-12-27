@@ -9,6 +9,7 @@ class CsvManager:
 
     DATE_FORMAT = "%d-%m-%Y"
     FALSE_CSV_FIELD_CONTENT_STRING = ""
+    TRUE_CSV_FIELD_CONTENT_STRING = "x"
 
     def __init__(self, csv_file_location):
         self.csv_file_location = csv_file_location
@@ -76,7 +77,7 @@ class CsvManager:
 
         selected_rows = []
         for row in self.get_all_rows():
-            if row[name] == "TRUE":
+            if row[name] == self.TRUE_CSV_FIELD_CONTENT_STRING:
                 video_name = self.convert_row_into_video_name(row)
                 selected_rows.append(video_name)
         return selected_rows
@@ -105,7 +106,7 @@ class CsvManager:
             print("No column exists for ", formatted_date, " creating one now.")
             self.insert_date_column(formatted_date)
 
-        self.dict[track][formatted_date] = "TRUE"
+        self.dict[track][formatted_date] = self.TRUE_CSV_FIELD_CONTENT_STRING
         self.write_changes_to_csv_file()
 
     @staticmethod
