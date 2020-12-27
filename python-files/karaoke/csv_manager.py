@@ -8,6 +8,7 @@ class CsvManager:
     "This class manages the reading of the CSV file, used as database to store all songs"
 
     DATE_FORMAT = "%d-%m-%Y"
+    FALSE_CSV_FIELD_CONTENT_STRING = ""
 
     def __init__(self, csv_file_location):
         self.csv_file_location = csv_file_location
@@ -118,7 +119,7 @@ class CsvManager:
 
     def insert_date_column(self, date):
         for row in self.get_all_rows():
-            self.dict[row['Track']].update({date: "FALSE"})
+            self.dict[row['Track']].update({date: self.FALSE_CSV_FIELD_CONTENT_STRING})
 
         self.reorder_columns()
 
