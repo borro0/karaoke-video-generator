@@ -141,6 +141,9 @@ def test_sort_fieldnames(csv_manager):
 
 
 def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    
+    # actual_csv_file = f"{dir_path}/csv_files/tracklist + bpm.csv" # use this one for debugging
     actual_csv_file = f"{tmp_csv_files}/tracklist + bpm.csv"
     csv_manager = CsvManager(actual_csv_file)
 
@@ -151,7 +154,6 @@ def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
     for song in red_playlist:
         csv_manager.record_song_played(song, date=datetime.date(2020, 11, 15))
 
-    dir_path = os.path.dirname(os.path.realpath(__file__))
     target_csv_file = f"{dir_path}/csv_files/tracklist + bpm 4 dates.csv"
 
     assert filecmp.cmp(actual_csv_file, target_csv_file)
