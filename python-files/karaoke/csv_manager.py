@@ -165,7 +165,7 @@ class CsvManager:
         fieldnames = self.get_field_names()
 
         with open(self.csv_file_location, "w", newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator=os.linesep)
             writer.writeheader()
             for row in self.get_all_rows():
                 writer.writerow(row)
