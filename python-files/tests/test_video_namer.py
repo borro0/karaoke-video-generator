@@ -30,16 +30,16 @@ def video_names(projects_dir):
     video_names = [v for v in video_names if v.endswith('.rzmmpj')]
     return video_names
 
-@pytest.mark.parametrize("start_idx, end_idx", [(0, 36), (36, 55), (55, 100)])
-def test_first_videos(tmp_path, video_names, projects_dir, start_idx, end_idx):
-    print("start of test", start_idx, end_idx)
-    video_names = video_names[start_idx:end_idx]
-    create_rendered_videos_folder(tmp_path, video_names)
-    print(tmp_path)
+# @pytest.mark.parametrize("start_idx, end_idx", [(0, 36), (36, 55), (55, 100)])
+# def test_first_videos(tmp_path, video_names, projects_dir, start_idx, end_idx):
+#     print("start of test", start_idx, end_idx)
+#     video_names = video_names[start_idx:end_idx]
+#     create_rendered_videos_folder(tmp_path, video_names)
+#     print(tmp_path)
 
-    video_namer = VideoNamer(tmp_path, projects_dir)
-    video_namer.rename_videos(start_idx, len(video_names))
+#     video_namer = VideoNamer(tmp_path, projects_dir)
+#     video_namer.rename_videos(start_idx, len(video_names))
 
-    video_names_mp4 = [m.replace('.rzmmpj', '.mp4') for m in video_names]
+#     video_names_mp4 = [m.replace('.rzmmpj', '.mp4') for m in video_names]
 
-    assert os.listdir(tmp_path) == video_names_mp4
+#     assert os.listdir(tmp_path) == video_names_mp4

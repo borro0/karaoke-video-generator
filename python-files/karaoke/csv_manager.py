@@ -2,12 +2,14 @@ import csv
 import tempfile
 import os
 import datetime
-
+import random
 
 class CsvManager:
     "This class manages the reading of the CSV file, used as database to store all songs"
 
     DATE_FORMAT = "%d-%m-%Y"
+    FALSE_CSV_FIELD_CONTENT_STRING = ""
+    TRUE_CSV_FIELD_CONTENT_STRING = "x"
 
     def __init__(self, csv_file_location):
         self.csv_file_location = csv_file_location
@@ -69,16 +71,20 @@ class CsvManager:
     def convert_row_into_video_name(self, row):
         return f"{row['Track']} - {row['Artist']}.mp4"
 
-    def get_playlist_by_name(self, name):
+    def get_playlist_by_name(self, name, shuffle=False):
+        playlist = []
         if self.is_playlist_name_a_difficulty(name):
-            return self.generate_playlist_by_difficulty(name)
-
-        selected_rows = []
-        for row in self.get_all_rows():
-            if row[name] == "TRUE":
-                video_name = self.convert_row_into_video_name(row)
-                selected_rows.append(video_name)
-        return selected_rows
+            playlist = self.generate_playlist_by_difficulty(name)
+        else:
+            for row in self.get_all_rows():
+                if row[name] == self.TRUE_CSV_FIELD_CONTENT_STRING:
+                    video_name = self.convert_row_into_video_name(row)
+                    playlist.append(video_name)
+        
+        if shuffle:
+            random.shuffle(playlist)
+        
+        return playlist
 
     @staticmethod
     def is_playlist_name_a_difficulty(name):
@@ -104,7 +110,7 @@ class CsvManager:
             print("No column exists for ", formatted_date, " creating one now.")
             self.insert_date_column(formatted_date)
 
-        self.dict[track][formatted_date] = "TRUE"
+        self.dict[track][formatted_date] = self.TRUE_CSV_FIELD_CONTENT_STRING
         self.write_changes_to_csv_file()
 
     @staticmethod
@@ -118,7 +124,7 @@ class CsvManager:
 
     def insert_date_column(self, date):
         for row in self.get_all_rows():
-            self.dict[row['Track']].update({date: "FALSE"})
+            self.dict[row['Track']].update({date: self.FALSE_CSV_FIELD_CONTENT_STRING})
 
         self.reorder_columns()
 
@@ -165,7 +171,7 @@ class CsvManager:
         fieldnames = self.get_field_names()
 
         with open(self.csv_file_location, "w", newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator=os.linesep)
             writer.writeheader()
             for row in self.get_all_rows():
                 writer.writerow(row)

@@ -140,8 +140,11 @@ def test_sort_fieldnames(csv_manager):
     assert sorted_fieldnames == expected_fieldnames
 
 
-def test_record_song_played(tmp_test_files, green_playlist, red_playlist):
-    actual_csv_file = f"{tmp_test_files}/tracklist + bpm.csv"
+def test_record_song_played(tmp_csv_files, green_playlist, red_playlist):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    # actual_csv_file = f"{dir_path}/csv_files/tracklist + bpm.csv" # use this one for debugging
+    actual_csv_file = f"{tmp_csv_files}/tracklist + bpm.csv"
     csv_manager = CsvManager(actual_csv_file)
 
     csv_manager.record_song_played(green_playlist[0], date=datetime.date(2020, 11, 22))
@@ -151,7 +154,6 @@ def test_record_song_played(tmp_test_files, green_playlist, red_playlist):
     for song in red_playlist:
         csv_manager.record_song_played(song, date=datetime.date(2020, 11, 15))
 
-    dir_path = os.path.dirname(os.path.realpath(__file__))
     target_csv_file = f"{dir_path}/test_files/tracklist + bpm 4 dates.csv"
 
     assert filecmp.cmp(actual_csv_file, target_csv_file)
@@ -171,3 +173,14 @@ def test_get_difficulty_playlist_by_name(csv_manager, green_playlist, red_playli
     assert compare_two_lists(received_playlist, yellow_playlist)
     received_playlist = csv_manager.get_playlist_by_name("red")
     assert compare_two_lists(received_playlist, red_playlist)
+
+
+def test_get_shuffled_playlist(csv_manager):
+    shuffled_playlist = csv_manager.get_playlist_by_name("green", shuffle=True)
+    unshuffled_playlist = csv_manager.get_playlist_by_name("green")
+    assert shuffled_playlist != unshuffled_playlist
+
+    # Sort both playlist, they should be equal now
+    shuffled_playlist.sort()
+    unshuffled_playlist.sort()
+    assert shuffled_playlist == unshuffled_playlist
