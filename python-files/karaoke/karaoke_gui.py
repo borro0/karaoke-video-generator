@@ -56,7 +56,10 @@ while True:
         print(playlist_name)
         karaoke = Karaoke()  # Create new karaoke instance every time
         if karaoke.has_valid_config():
-            karaoke.play_playlist(playlist_name, shuffle=values["-SHUFFLE-"])
+            if karaoke.not_allowed_to_alter_csv_file() or True:
+                sg.popup("We cannot edit the tracklist csv file! Please close any program which has opened this file")
+            else:
+                karaoke.play_playlist(playlist_name, shuffle=values["-SHUFFLE-"])
 
     if event == "-VIDEO FOLDER-":
         folder = values["-VIDEO FOLDER-"]

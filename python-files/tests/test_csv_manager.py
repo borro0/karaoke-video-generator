@@ -3,6 +3,7 @@ import os
 import filecmp
 import shutil
 import datetime
+from stat import S_IREAD, S_IRGRP, S_IROTH
 
 from karaoke.csv_manager import CsvManager
 # Execute test with: pytest -s -k "csv_manager"
@@ -144,7 +145,7 @@ def test_record_song_played(tmp_test_files, green_playlist, red_playlist):
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
     # actual_csv_file = f"{dir_path}/csv_files/tracklist + bpm.csv" # use this one for debugging
-    actual_csv_file = f"{tmp_test_files}/tracklist + bpm.csv"
+    actual_csv_file = tmp_test_files / "tracklist + bpm.csv"
     csv_manager = CsvManager(actual_csv_file)
 
     csv_manager.record_song_played(green_playlist[0], date=datetime.date(2020, 11, 22))
@@ -157,6 +158,19 @@ def test_record_song_played(tmp_test_files, green_playlist, red_playlist):
     target_csv_file = f"{dir_path}/test_files/tracklist + bpm 4 dates.csv"
 
     assert filecmp.cmp(actual_csv_file, target_csv_file)
+
+
+def test_not_allowed_to_alter_csv_file(tmp_test_files, green_playlist):
+    actual_csv_file = f"{tmp_test_files}/tracklist + bpm.csv"
+
+    # make csv file read-only
+    os.chmod(actual_csv_file, S_IREAD | S_IRGRP | S_IROTH)
+    csv_manager = CsvManager(actual_csv_file)
+
+    assert csv_manager.not_allowed_to_alter_csv_file()
+
+    with pytest.raises(PermissionError):
+        csv_manager.record_song_played(green_playlist[0])
 
 
 def test_get_all_playlist(csv_manager):

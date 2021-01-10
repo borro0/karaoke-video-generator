@@ -61,6 +61,9 @@ class Karaoke:
         playlist = self.csv_manager.get_playlist_by_name(playlist_name, shuffle)
         self.mpv_manager.play_playlist(playlist)
 
+    def not_allowed_to_alter_csv_file(self):
+        return self.csv_manager.not_allowed_to_alter_csv_file()
+
 
 if __name__ == '__main__':
     karaoke = Karaoke()

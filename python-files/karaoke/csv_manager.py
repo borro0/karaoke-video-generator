@@ -207,3 +207,11 @@ class CsvManager:
 
     def get_all_colored_playlists_names(self):
         return ["red", "yellow", "green"]
+
+    def not_allowed_to_alter_csv_file(self):
+        try:
+            with open(self.csv_file_location, "w"):
+                return False
+        except PermissionError:
+            print("Not allowed to alter csv file")
+            return True
