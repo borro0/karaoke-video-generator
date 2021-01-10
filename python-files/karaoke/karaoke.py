@@ -2,11 +2,6 @@ from csv_manager import CsvManager
 from mpv_manager import MpvManger
 from config_manager import ConfigManager
 
-import os
-
-VIDEO_DIRECTORY = r'C:\Users\boris\Google Drive\Live Karaoke Band\Lyric-videos\rendered videos'
-TRACKLIST_FILE = r'D:\Documents\karaoke-video-generator\python-files\tests\csv_files\tracklist + bpm.csv'
-
 
 class Karaoke:
     """
@@ -16,14 +11,12 @@ class Karaoke:
     If it does not have a valid config
     """
 
-    def __init__(self, video_dir=VIDEO_DIRECTORY, tracklist=TRACKLIST_FILE):
+    def __init__(self):
         self.config_manager = ConfigManager()
-        
-        if self. config_manager.has_valid_config():
+
+        if self.config_manager.has_valid_config():
             print("Valid config file is detected")
-            video_dir = self.config_manager.get_config('PATHS', 'video_directory')
-            tracklist = self.config_manager.get_config('PATHS', 'tracklist_file')
-            self.setup(video_dir, tracklist)
+            self.setup()
         else:
             print("No valid config file is found")
 
@@ -32,7 +25,7 @@ class Karaoke:
 
     def get_video_directory(self):
         return self.config_manager.get_config('PATHS', 'video_directory')
-    
+
     def set_video_directory(self, video_dir):
         return self.config_manager.set_config('PATHS', 'video_directory', video_dir)
 
@@ -42,7 +35,10 @@ class Karaoke:
     def set_tracklist_file(self, tracklist_file):
         return self.config_manager.set_config('PATHS', 'tracklist_file', tracklist_file)
 
-    def setup(self, video_dir, tracklist):
+    def setup(self):
+        video_dir = self.config_manager.get_config('PATHS', 'video_directory')
+        tracklist = self.config_manager.get_config('PATHS', 'tracklist_file')
+
         # setup csv manager
         self.csv_manager = CsvManager(tracklist)
 
@@ -55,10 +51,14 @@ class Karaoke:
         self.mpv_manager.play_playlist(playlist)
 
     def get_all_playlists(self):
-        return self.csv_manager.get_all_playlist_names()
+        try:
+            playlists = self.csv_manager.get_all_playlist_names()
+        except AttributeError:
+            playlists = []
+        return playlists
 
-    def play_playlist(self, playlist_name):
-        playlist = self.csv_manager.get_playlist_by_name(playlist_name)
+    def play_playlist(self, playlist_name, shuffle=False):
+        playlist = self.csv_manager.get_playlist_by_name(playlist_name, shuffle)
         self.mpv_manager.play_playlist(playlist)
 
 

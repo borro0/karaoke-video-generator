@@ -24,6 +24,7 @@ file_list_column = [
     ],
     [
         sg.Text("Select playlist"),
+        sg.Checkbox('Shuffle', default=False, key="-SHUFFLE-")
     ],
     [
         sg.Listbox(
@@ -51,7 +52,7 @@ while True:
         playlist_name = values["-FILE LIST-"][0]
         print(playlist_name)
         karaoke = Karaoke()  # Create new karaoke instance every time
-        karaoke.play_playlist(playlist_name)
+        karaoke.play_playlist(playlist_name, shuffle=values["-SHUFFLE-"])
     if event == "-VIDEO FOLDER-":
         folder = values["-VIDEO FOLDER-"]
         print(folder)

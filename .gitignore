@@ -197,3 +197,6 @@ static
 
 # VSCode
 .vscode
+
+# Karaoke specific
+config.ini
