@@ -40,7 +40,7 @@ layout = [
     ]
 ]
 
-window = sg.Window("Image Viewer", layout)
+window = sg.Window("LRKB Supermachinehackcomputer", layout)
 
 # Run the Event Loop
 while True:
@@ -49,20 +49,28 @@ while True:
         break
     # Folder name was filled in, make a list of files in the folder
     if event == "-FILE LIST-":  # A file was chosen from the listbox
-        playlist_name = values["-FILE LIST-"][0]
+        try:
+            playlist_name = values["-FILE LIST-"][0]
+        except IndexError:
+            continue
         print(playlist_name)
         karaoke = Karaoke()  # Create new karaoke instance every time
-        karaoke.play_playlist(playlist_name, shuffle=values["-SHUFFLE-"])
+        if karaoke.has_valid_config():
+            karaoke.play_playlist(playlist_name, shuffle=values["-SHUFFLE-"])
+
     if event == "-VIDEO FOLDER-":
         folder = values["-VIDEO FOLDER-"]
         print(folder)
         karaoke.set_video_directory(folder)
+
     if event == "-TRACKLIST FILE-":
         tracklist_file = values["-TRACKLIST FILE-"]
         print(tracklist_file)
         karaoke.set_tracklist_file(tracklist_file)
         if karaoke.has_valid_config():
+            karaoke = Karaoke()  # Create new karaoke instance every time
             playlists = karaoke.get_all_playlists()
+            print(playlists)
             window["-FILE LIST-"].update(playlists)
 
 window.close()
