@@ -1,6 +1,6 @@
 import pytest
 import shutil
-import os
+import os, sys
 
 from karaoke.config_manager import ConfigManager
 
@@ -35,7 +35,8 @@ def test_is_no_config_file_available(tmp_test_files):
 
 def test_has_valid_config(tmp_test_files):
     config_manager = ConfigManager(f"{tmp_test_files}/config.ini")
-    assert config_manager.has_valid_config() is True
+    if sys.platform == "windows":
+        assert config_manager.has_valid_config() is True
 
 
 def test_invalid_config(tmp_test_files):
