@@ -167,7 +167,7 @@ def test_not_allowed_to_alter_csv_file(tmp_test_files, green_playlist):
     os.chmod(actual_csv_file, S_IREAD | S_IRGRP | S_IROTH)
     csv_manager = CsvManager(actual_csv_file)
 
-    assert csv_manager.not_allowed_to_alter_csv_file()
+    assert not csv_manager.allowed_to_alter_csv_file()
 
     with pytest.raises(PermissionError):
         csv_manager.record_song_played(green_playlist[0])
