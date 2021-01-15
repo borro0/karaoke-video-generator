@@ -20,7 +20,10 @@ class CsvManager:
             rowsReader = csv.DictReader(csv_file)
             dict = {}
             for row in rowsReader:
-                dict[row['Track']] = row
+                try:
+                    dict[row['Track']] = row
+                except KeyError:
+                    pass
             return dict
 
     def get_all_rows(self):
@@ -177,9 +180,12 @@ class CsvManager:
                 writer.writerow(row)
 
     def get_field_names(self):
-        first_row = list(self.get_all_rows())[0]
-        keys_or_first_row = first_row.keys()
-        return list(keys_or_first_row)
+        try:
+            first_row = list(self.get_all_rows())[0]
+            keys_or_first_row = first_row.keys()
+            return list(keys_or_first_row)
+        except KeyError and IndexError:
+            return []
 
     def get_all_playlist_names(self):
         field_names = self.get_field_names()
@@ -215,3 +221,7 @@ class CsvManager:
         except PermissionError:
             print("Not allowed to alter csv file")
             return True
+
+    def is_csv_valid(self):
+        fields = self.get_field_names()
+        return len(fields) > 2 and fields[0] == "Track" and fields[1] == "Artist"

@@ -198,3 +198,11 @@ def test_get_shuffled_playlist(csv_manager):
     shuffled_playlist.sort()
     unshuffled_playlist.sort()
     assert shuffled_playlist == unshuffled_playlist
+
+def test_is_csv_valid(csv_manager):
+    assert csv_manager.is_csv_valid()
+
+def test_is_csv_invalid(tmp_test_files):
+    invalid_csv_file = tmp_test_files / "config.ini"
+    csv_manager = CsvManager(invalid_csv_file)
+    assert csv_manager.is_csv_valid() == False

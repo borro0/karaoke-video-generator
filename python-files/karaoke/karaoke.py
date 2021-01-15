@@ -21,7 +21,14 @@ class Karaoke:
             print("No valid config file is found")
 
     def has_valid_config(self):
-        return self.config_manager.has_valid_config()
+        if not self.config_manager.has_valid_config():
+            print("Invalid config")
+            return False
+        if not self.csv_manager.is_csv_valid():
+            print("Invalid tracklist")
+            return False
+        
+        return True
 
     def get_video_directory(self):
         return self.config_manager.get_config('PATHS', 'video_directory')
@@ -36,13 +43,15 @@ class Karaoke:
         return self.config_manager.set_config('PATHS', 'tracklist_file', tracklist_file)
 
     def setup(self):
-        video_dir = self.config_manager.get_config('PATHS', 'video_directory')
-        tracklist = self.config_manager.get_config('PATHS', 'tracklist_file')
+        self.setup_csv_file_manager()
+        self.setup_mpv_manager()
 
-        # setup csv manager
+    def setup_csv_file_manager(self):
+        tracklist = self.config_manager.get_config('PATHS', 'tracklist_file')
         self.csv_manager = CsvManager(tracklist)
 
-        # setup mpv manager
+    def setup_mpv_manager(self):
+        video_dir = self.config_manager.get_config('PATHS', 'video_directory')
         song_completed_callback = self.csv_manager.record_song_played
         self.mpv_manager = MpvManger(song_completed_callback, video_dir)
 
