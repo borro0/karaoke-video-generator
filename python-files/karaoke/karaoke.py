@@ -66,8 +66,8 @@ class Karaoke:
             playlists = []
         return playlists
 
-    def play_playlist(self, playlist_name, shuffle=False):
-        playlist = self.csv_manager.get_playlist_by_name(playlist_name, shuffle)
+    def play_playlist(self, playlist_name, shuffle=False, longest_not_played_first=False):
+        playlist = self.csv_manager.get_playlist_by_name(playlist_name, shuffle, longest_not_played_first)
         self.mpv_manager.play_playlist(playlist)
 
     def allowed_to_alter_csv_file(self):

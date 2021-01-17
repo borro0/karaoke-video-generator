@@ -75,7 +75,7 @@ class CsvManager:
     def convert_row_into_video_name(row):
         return f"{row['Track']} - {row['Artist']}.mp4"
 
-    def get_playlist_by_name(self, name, shuffle=False):
+    def get_playlist_by_name(self, name, shuffle=False, longest_not_played_first=False):
         playlist = []
         if self.is_playlist_name_a_difficulty(name):
             playlist = self.generate_playlist_by_difficulty(name)
@@ -87,6 +87,9 @@ class CsvManager:
         
         if shuffle:
             random.shuffle(playlist)
+        
+        if longest_not_played_first:
+            playlist = self.order_playlist_longest_not_played_first(playlist)
         
         return playlist
 

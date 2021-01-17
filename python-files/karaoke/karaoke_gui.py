@@ -23,8 +23,13 @@ file_list_column = [
         sg.FileBrowse(),
     ],
     [
+        sg.Text("Playlist order:"),
+        sg.Radio('Default', "PLAYLIST_SORT", default=True),
+        sg.Radio('Longest not played first', "PLAYLIST_SORT", default=False, key="-LONGEST_NOT_PLAYED-"),
+        sg.Radio('Shuffle', "PLAYLIST_SORT", default=False, key="-SHUFFLE-"),
+    ],
+    [
         sg.Text("Select playlist"),
-        sg.Checkbox('Shuffle', default=False, key="-SHUFFLE-")
     ],
     [
         sg.Listbox(
@@ -57,7 +62,15 @@ while True:
         karaoke = Karaoke()  # Create new karaoke instance every time
         if karaoke.has_valid_config():
             if karaoke.allowed_to_alter_csv_file():
-                karaoke.play_playlist(playlist_name, shuffle=values["-SHUFFLE-"])
+                if values["-SHUFFLE-"]:
+                    print("Shuffle enabled")
+                    karaoke.play_playlist(playlist_name, shuffle=True)
+                elif values["-LONGEST_NOT_PLAYED-"]:
+                    print("Longest not played first enabled")
+                    karaoke.play_playlist(playlist_name, longest_not_played_first=True)
+                else:
+                    print("Playing with default order")
+                    karaoke.play_playlist(playlist_name)
             else:
                 sg.popup("We cannot edit the tracklist csv file! Please close any program which has opened this file")
 
