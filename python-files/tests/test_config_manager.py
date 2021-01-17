@@ -25,7 +25,7 @@ def test_get_default_values(tmp_test_files):
     assert video_dir == 'C:/Users/boris/Google Drive/Live Karaoke Band/Lyric-videos/rendered videos'
 
     tracklist_file = config_manager.get_config('PATHS', 'tracklist_file')
-    assert tracklist_file == 'D:/Documents/karaoke-video-generator/python-files/tests/test_files/tracklist + bpm.csv'
+    assert tracklist_file == 'D:/Documents/karaoke-video-generator/python-files/tests/test_files/tracklist.csv'
 
 
 def test_is_no_config_file_available(tmp_test_files):

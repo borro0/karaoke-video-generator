@@ -13,7 +13,7 @@ class CsvManager:
 
     def __init__(self, csv_file_location):
         self.csv_file_location = csv_file_location
-        self.dict = self.read_csv_file(csv_file_location)
+        self.track_dict = self.read_csv_file(csv_file_location)
 
     def read_csv_file(self, csv_file_location):
         with open(csv_file_location, mode='r') as csv_file:
@@ -27,7 +27,7 @@ class CsvManager:
             return dict
 
     def get_all_rows(self):
-        return self.dict.values()
+        return self.track_dict.values()
 
     def print_csv_file(self, csv_file_location):
         line_count = 0
@@ -71,7 +71,8 @@ class CsvManager:
         }
         return difficulty_dict[difficulty_name]
 
-    def convert_row_into_video_name(self, row):
+    @staticmethod
+    def convert_row_into_video_name(row):
         return f"{row['Track']} - {row['Artist']}.mp4"
 
     def get_playlist_by_name(self, name, shuffle=False):
@@ -100,25 +101,25 @@ class CsvManager:
             f.writelines('\n'.join(playlist))
         return filename
 
-    def record_song_played(self, song, date=datetime.date.today()):
+    def record_song_played(self, video_name, date=datetime.date.today()):
         """
-        Put record in csv file that song is played.
+        Put record in csv file that video name is played.
         If there exists a column of current day, set field to TRUE.
         If such a column does not exist yet, create one.
         """
-        track = self.get_title_from_song(song)
+        track = self.get_track_name_from_video_name(video_name)
         print("Insert ", track)
         formatted_date = self.convert_date_to_string(date)
-        if formatted_date not in self.dict[track]:
+        if formatted_date not in self.track_dict[track]:
             print("No column exists for ", formatted_date, " creating one now.")
             self.insert_date_column(formatted_date)
 
-        self.dict[track][formatted_date] = self.TRUE_CSV_FIELD_CONTENT_STRING
+        self.track_dict[track][formatted_date] = self.TRUE_CSV_FIELD_CONTENT_STRING
         self.write_changes_to_csv_file()
 
     @staticmethod
-    def get_title_from_song(song):
-        return song.split(" - ")[0]
+    def get_track_name_from_video_name(video_name):
+        return video_name.split(" - ")[0]
 
     def convert_date_to_string(self, date):
         date = date.strftime(self.DATE_FORMAT)
@@ -127,7 +128,7 @@ class CsvManager:
 
     def insert_date_column(self, date):
         for row in self.get_all_rows():
-            self.dict[row['Track']].update({date: self.FALSE_CSV_FIELD_CONTENT_STRING})
+            self.track_dict[row['Track']].update({date: self.FALSE_CSV_FIELD_CONTENT_STRING})
 
         self.reorder_columns()
 
@@ -142,7 +143,7 @@ class CsvManager:
                 new_row[fieldname] = row[fieldname]
             new_dict[row['Track']] = new_row
 
-        self.dict = new_dict
+        self.track_dict = new_dict
 
     def sort_fieldnames(self, fieldnames):
         date_list = []
@@ -167,7 +168,6 @@ class CsvManager:
             datetime.datetime.strptime(date, self.DATE_FORMAT)
             return True
         except ValueError:
-            print(date, "is not a date")
             return False
 
     def write_changes_to_csv_file(self):
@@ -195,6 +195,9 @@ class CsvManager:
         print(field_names)
         return field_names
 
+    def get_all_dates(self):
+        return self.get_all_dates_from_field_names(self.get_field_names())
+
     def remove_pre_defined_non_playlist_fields(self, field_names):
         non_playlist_fields = ["Track", "Artist", "Selectie", "Date Added",
                                "BPM", "Extra aandacht", "Shuffle?", "Actief", "Video"]
@@ -210,7 +213,13 @@ class CsvManager:
             if self.is_date(item):
                 field_names.remove(item)
         return field_names
-
+    
+    def get_all_dates_from_field_names(self, field_names):
+        for item in list(field_names):
+            if not self.is_date(item):
+                field_names.remove(item)
+        return field_names
+    
     def get_all_colored_playlists_names(self):
         return ["red", "yellow", "green"]
 
@@ -220,3 +229,32 @@ class CsvManager:
     def is_csv_valid(self):
         fields = self.get_field_names()
         return len(fields) > 2 and fields[0] == "Track" and fields[1] == "Artist"
+
+    def order_playlist_longest_not_played_first(self, playlist):
+        dict = self.create_dict_playlist_days_not_played(playlist)
+        days_not_played_set = set(dict.values())
+        sorted_days_not_played_set = sorted(days_not_played_set, reverse=True)
+        sorted_playlist = []
+        for days_not_played in sorted_days_not_played_set:
+            for video in playlist:
+                if dict[video] == days_not_played:
+                    sorted_playlist.append(video)
+        return sorted_playlist
+
+    def create_dict_playlist_days_not_played(self, playlist):
+        dict = {}
+        for video_name in playlist:
+            track_name = self.get_track_name_from_video_name(video_name)
+            dict[video_name] = self.calculate_track_days_not_played(track_name)
+        return dict
+
+    def calculate_track_days_not_played(self, track):
+        dates = self.get_all_dates()
+        last_played = datetime.date(2018,10,30)
+        for date in dates:
+            if self.track_dict[track][date] == self.TRUE_CSV_FIELD_CONTENT_STRING:
+                last_played = datetime.datetime.strptime(date, self.DATE_FORMAT).date()
+        
+        now = datetime.date.today()
+        delta = now - last_played
+        return delta.days

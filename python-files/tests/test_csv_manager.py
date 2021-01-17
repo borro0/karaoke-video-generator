@@ -20,7 +20,7 @@ def basic_file():
 @pytest.fixture
 def tracklist_bpm_file():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    csv_file = f"{dir_path}/test_files/tracklist + bpm.csv"
+    csv_file = f"{dir_path}/test_files/tracklist.csv"
 
     return csv_file
 
@@ -63,6 +63,10 @@ def compare_two_lists(list1, list2):
     list2.sort()
     return list1 == list2
 
+def are_files_identical(filename1, filename2):
+    a = open(filename1, 'r').read().strip()
+    b = open(filename2, 'r').read().strip()
+    return a == b
 
 @pytest.fixture
 def tmp_test_files(tmp_path):
@@ -118,9 +122,9 @@ def test_store_playlist_to_file(green_playlist):
     assert filecmp.cmp(green_playlist_file_expected, generated_playlist_actual)
 
 
-def test_get_title_from_song():
+def test_get_track_name_from_video_name():
     song = "More Than A Feeling - Boston.mp4"
-    assert CsvManager.get_title_from_song(song) == "More Than A Feeling"
+    assert CsvManager.get_track_name_from_video_name(song) == "More Than A Feeling"
 
 
 def test_convert_date_to_stringt(csv_manager):
@@ -144,8 +148,8 @@ def test_sort_fieldnames(csv_manager):
 def test_record_song_played(tmp_test_files, green_playlist, red_playlist):
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
-    # actual_csv_file = f"{dir_path}/csv_files/tracklist + bpm.csv" # use this one for debugging
-    actual_csv_file = tmp_test_files / "tracklist + bpm.csv"
+    # actual_csv_file = f"{dir_path}/test_files/tracklist.csv" # use this one for debugging
+    actual_csv_file = tmp_test_files / "tracklist.csv"
     csv_manager = CsvManager(actual_csv_file)
 
     csv_manager.record_song_played(green_playlist[0], date=datetime.date(2020, 11, 22))
@@ -155,13 +159,14 @@ def test_record_song_played(tmp_test_files, green_playlist, red_playlist):
     for song in red_playlist:
         csv_manager.record_song_played(song, date=datetime.date(2020, 11, 15))
 
-    target_csv_file = f"{dir_path}/test_files/tracklist + bpm 4 dates.csv"
+    target_csv_file = f"{dir_path}/test_files/tracklist_4_dates.csv"
 
-    assert filecmp.cmp(actual_csv_file, target_csv_file)
+    assert are_files_identical(actual_csv_file, target_csv_file)
+    # assert filecmp.cmp(actual_csv_file, target_csv_file)
 
 
 def test_not_allowed_to_alter_csv_file(tmp_test_files, green_playlist):
-    actual_csv_file = f"{tmp_test_files}/tracklist + bpm.csv"
+    actual_csv_file = f"{tmp_test_files}/tracklist.csv"
 
     # make csv file read-only
     os.chmod(actual_csv_file, S_IREAD | S_IRGRP | S_IROTH)
@@ -198,6 +203,13 @@ def test_get_shuffled_playlist(csv_manager):
     shuffled_playlist.sort()
     unshuffled_playlist.sort()
     assert shuffled_playlist == unshuffled_playlist
+
+def test_order_playlist_by_date_last_played(csv_manager, green_playlist):
+    playlist_unsorted = read_playlist("green")
+    playlist_longest_not_played_first = read_playlist("green_longest_not_played_first")
+
+    playlist_sorted = csv_manager.order_playlist_longest_not_played_first(playlist_unsorted)
+    assert playlist_sorted == playlist_longest_not_played_first
 
 def test_is_csv_valid(csv_manager):
     assert csv_manager.is_csv_valid()
