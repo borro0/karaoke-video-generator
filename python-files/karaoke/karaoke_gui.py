@@ -60,19 +60,21 @@ while True:
             continue
         print(playlist_name)
         karaoke = Karaoke()  # Create new karaoke instance every time
-        if karaoke.has_valid_config():
-            if karaoke.allowed_to_alter_csv_file():
-                if values["-SHUFFLE-"]:
-                    print("Shuffle enabled")
-                    karaoke.play_playlist(playlist_name, shuffle=True)
-                elif values["-LONGEST_NOT_PLAYED-"]:
-                    print("Longest not played first enabled")
-                    karaoke.play_playlist(playlist_name, longest_not_played_first=True)
-                else:
-                    print("Playing with default order")
-                    karaoke.play_playlist(playlist_name)
-            else:
-                sg.popup("We cannot edit the tracklist csv file! Please close any program which has opened this file")
+        if not karaoke.has_valid_config():
+            sg.popup("Your config is invalid!")
+            continue
+        if not karaoke.allowed_to_alter_csv_file():
+            sg.popup("We cannot edit the tracklist csv file! Please close any program which has opened this file")
+            continue
+        if values["-SHUFFLE-"]:
+            print("Shuffle enabled")
+            karaoke.play_playlist(playlist_name, shuffle=True)
+        elif values["-LONGEST_NOT_PLAYED-"]:
+            print("Longest not played first enabled")
+            karaoke.play_playlist(playlist_name, longest_not_played_first=True)
+        else:
+            print("Playing with default order")
+            karaoke.play_playlist(playlist_name)
 
     if event == "-VIDEO FOLDER-":
         folder = values["-VIDEO FOLDER-"]
